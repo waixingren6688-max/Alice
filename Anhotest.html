@@ -1,0 +1,2786 @@
+```html
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Happy Birthday 🎂</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+            width: 100%;
+            height: 100vh;
+
+            overflow: hidden;
+
+            font-family: Arial, sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ff9ecb,
+                    #b794f6,
+                    #7ddcff
+                );
+        }
+
+
+        /* ==================================================
+           MÀN HÌNH ĐẦU
+        ================================================== */
+
+
+        #welcome-screen {
+            position: fixed;
+            inset: 0;
+
+            z-index: 500;
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ff9ecb,
+                    #c89cff,
+                    #8ddcff
+                );
+
+            transition:
+                opacity 1s ease;
+        }
+
+
+        .welcome-card {
+            width: 420px;
+
+            max-width: 90%;
+
+            padding: 35px;
+
+            background:
+                rgba(255, 255, 255, 0.2);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.5);
+
+            border-radius: 30px;
+
+            backdrop-filter: blur(15px);
+
+            text-align: center;
+
+            box-shadow:
+                0 20px 50px
+                rgba(0, 0, 0, 0.2);
+
+            animation:
+                cardAppear 1.5s ease;
+        }
+
+
+        @keyframes cardAppear {
+
+            from {
+                opacity: 0;
+
+                transform:
+                    translateY(100px)
+                    scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+
+        }
+
+
+        /* ==================================================
+           ẢNH TRÒN
+        ================================================== */
+
+
+        .photo-upload {
+            position: relative;
+
+            width: 150px;
+            height: 150px;
+
+            margin: auto;
+
+            border-radius: 50%;
+
+            cursor: pointer;
+
+            animation:
+                photoFloat
+                2s
+                infinite
+                alternate;
+        }
+
+
+        .birthday-photo {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            border-radius: 50%;
+
+            border:
+                6px solid white;
+
+            box-shadow:
+                0 0 15px white,
+                0 0 30px #ff69b4,
+                0 0 50px #ff1493;
+        }
+
+
+        .photo-overlay {
+            position: absolute;
+
+            inset: 0;
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 50%;
+
+            background:
+                rgba(0, 0, 0, 0.45);
+
+            color: white;
+
+            font-size: 17px;
+            font-weight: bold;
+
+            opacity: 0;
+
+            transition: 0.3s;
+        }
+
+
+        .photo-upload:hover
+        .photo-overlay {
+            opacity: 1;
+        }
+
+
+        @keyframes photoFloat {
+
+            from {
+                transform:
+                    translateY(0)
+                    rotate(-3deg);
+            }
+
+            to {
+                transform:
+                    translateY(-15px)
+                    rotate(3deg);
+            }
+
+        }
+
+
+        .welcome-card h1 {
+            color: white;
+
+            margin-top: 25px;
+
+            font-size: 30px;
+
+            text-shadow:
+                0 0 10px white,
+                0 0 20px #ff1493;
+        }
+
+
+        .welcome-card p {
+            color: white;
+
+            margin:
+                15px 0 25px;
+
+            font-size: 17px;
+        }
+
+
+        /* ==================================================
+           INPUT
+        ================================================== */
+
+
+        .input-group {
+            margin-bottom: 15px;
+
+            text-align: left;
+        }
+
+
+        .input-group label {
+            display: block;
+
+            color: white;
+
+            margin-bottom: 7px;
+
+            font-weight: bold;
+        }
+
+
+        .input-group input {
+            width: 100%;
+
+            padding:
+                14px 18px;
+
+            border: none;
+
+            outline: none;
+
+            border-radius: 30px;
+
+            font-size: 16px;
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.9
+                );
+        }
+
+
+        #enter-button {
+            width: 100%;
+
+            margin-top: 10px;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 30px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #ff477e,
+                    #ff70a6
+                );
+
+            color: white;
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 0 20px
+                rgba(
+                    255,
+                    71,
+                    126,
+                    0.7
+                );
+
+            transition: 0.3s;
+        }
+
+
+        #enter-button:hover {
+            transform:
+                scale(1.05);
+        }
+
+
+        #error-message {
+            color: white;
+
+            margin-top: 15px;
+
+            min-height: 20px;
+
+            font-size: 14px;
+        }
+
+
+        /* ==================================================
+           MÀN HÌNH NGÂN HÀ
+        ================================================== */
+
+
+        #gift-screen {
+            position: fixed;
+
+            inset: 0;
+
+            display: none;
+
+            flex-direction: column;
+
+            justify-content: center;
+            align-items: center;
+
+            overflow: hidden;
+
+            z-index: 100;
+
+            background:
+
+                radial-gradient(
+                    circle at 20% 30%,
+                    rgba(
+                        255,
+                        0,
+                        170,
+                        0.35
+                    ),
+                    transparent 35%
+                ),
+
+                radial-gradient(
+                    circle at 80% 65%,
+                    rgba(
+                        0,
+                        150,
+                        255,
+                        0.35
+                    ),
+                    transparent 35%
+                ),
+
+                radial-gradient(
+                    ellipse at center,
+                    #30106b,
+                    #10002b 55%,
+                    #020006
+                );
+
+            transition:
+                opacity 1s ease;
+        }
+
+
+        /* ==================================================
+           DẢI NGÂN HÀ
+        ================================================== */
+
+
+        .galaxy {
+            position: absolute;
+
+            width: 180vw;
+            height: 450px;
+
+            border-radius: 50%;
+
+            background:
+
+                radial-gradient(
+                    ellipse,
+                    rgba(
+                        255,
+                        255,
+                        255,
+                        0.95
+                    ) 0%,
+
+                    rgba(
+                        255,
+                        180,
+                        240,
+                        0.6
+                    ) 12%,
+
+                    rgba(
+                        160,
+                        100,
+                        255,
+                        0.45
+                    ) 30%,
+
+                    rgba(
+                        60,
+                        120,
+                        255,
+                        0.2
+                    ) 50%,
+
+                    transparent 72%
+                );
+
+            filter:
+                blur(35px);
+
+            opacity: 0.8;
+
+            animation:
+                galaxyRotate
+                25s
+                linear
+                infinite;
+
+            pointer-events: none;
+        }
+
+
+        @keyframes galaxyRotate {
+
+            from {
+                transform:
+                    rotate(-25deg)
+                    scale(1);
+            }
+
+            50% {
+                transform:
+                    rotate(-5deg)
+                    scale(1.15);
+            }
+
+            to {
+                transform:
+                    rotate(15deg)
+                    scale(1);
+            }
+
+        }
+
+
+        /* ==================================================
+           SAO
+        ================================================== */
+
+
+        .galaxy-star {
+            position: absolute;
+
+            background: white;
+
+            border-radius: 50%;
+
+            box-shadow:
+                0 0 5px white,
+                0 0 10px #9fdcff,
+                0 0 15px #ff9ee8;
+
+            animation:
+                galaxyStarBlink
+                infinite
+                alternate;
+
+            pointer-events: none;
+        }
+
+
+        @keyframes galaxyStarBlink {
+
+            from {
+                opacity: 0.15;
+
+                transform:
+                    scale(0.5);
+            }
+
+            to {
+                opacity: 1;
+
+                transform:
+                    scale(1.8);
+            }
+
+        }
+
+
+        /* ==================================================
+           SAO BĂNG
+        ================================================== */
+
+
+        .shooting-star {
+            position: absolute;
+
+            width: 4px;
+            height: 4px;
+
+            border-radius: 50%;
+
+            background: white;
+
+            box-shadow:
+                0 0 10px white,
+                0 0 20px #8edcff,
+                0 0 30px #ff9ee8;
+
+            pointer-events: none;
+
+            z-index: 5;
+
+            animation:
+                shootingStar
+                linear
+                forwards;
+        }
+
+
+        .shooting-star::before {
+            content: "";
+
+            position: absolute;
+
+            top: 50%;
+
+            right: 0;
+
+            width: 180px;
+
+            height: 2px;
+
+            transform:
+                translateY(-50%);
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(
+                        255,
+                        255,
+                        255,
+                        0.8
+                    )
+                );
+        }
+
+
+        @keyframes shootingStar {
+
+            from {
+                transform:
+                    translate(
+                        -200px,
+                        -100px
+                    )
+                    rotate(25deg);
+
+                opacity: 1;
+            }
+
+            to {
+                transform:
+                    translate(
+                        120vw,
+                        70vh
+                    )
+                    rotate(25deg);
+
+                opacity: 0;
+            }
+
+        }
+
+
+        /* ==================================================
+           TIÊU ĐỀ QUÀ
+        ================================================== */
+
+
+        #gift-screen h1 {
+            position: relative;
+
+            z-index: 20;
+
+            color: white;
+
+            margin-bottom: 70px;
+
+            padding:
+                0 20px;
+
+            text-align: center;
+
+            text-shadow:
+                0 0 10px white,
+                0 0 20px #ff9ee8,
+                0 0 40px #9d4edd;
+
+            animation:
+                giftTitleGlow
+                2s
+                infinite
+                alternate;
+        }
+
+
+        @keyframes giftTitleGlow {
+
+            from {
+                text-shadow:
+                    0 0 10px white,
+                    0 0 20px #ff9ee8,
+                    0 0 40px #9d4edd;
+            }
+
+            to {
+                text-shadow:
+                    0 0 20px white,
+                    0 0 40px #ff1493,
+                    0 0 70px #7b2cff;
+            }
+
+        }
+
+
+        /* ==================================================
+           HỘP QUÀ
+        ================================================== */
+
+
+        .gift {
+            position: relative;
+
+            width: 180px;
+            height: 150px;
+
+            cursor: pointer;
+
+            z-index: 20;
+
+            animation:
+                giftShake
+                1.5s
+                infinite,
+
+                giftGlow
+                1.2s
+                infinite
+                alternate;
+        }
+
+
+        .gift::after {
+            content: "";
+
+            position: absolute;
+
+            inset: -45px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(
+                        255,
+                        220,
+                        120,
+                        0.5
+                    ),
+                    transparent 65%
+                );
+
+            z-index: -1;
+
+            animation:
+                giftAura
+                1.2s
+                infinite
+                alternate;
+        }
+
+
+        @keyframes giftGlow {
+
+            from {
+                filter:
+                    drop-shadow(
+                        0 0 10px
+                        #ffd166
+                    );
+            }
+
+            to {
+                filter:
+                    drop-shadow(
+                        0 0 40px
+                        #ff9ee8
+                    );
+            }
+
+        }
+
+
+        @keyframes giftAura {
+
+            from {
+                transform:
+                    scale(0.8);
+
+                opacity: 0.4;
+            }
+
+            to {
+                transform:
+                    scale(1.3);
+
+                opacity: 1;
+            }
+
+        }
+
+
+        @keyframes giftShake {
+
+            0%,
+            100% {
+                transform:
+                    rotate(0deg);
+            }
+
+            20% {
+                transform:
+                    rotate(-4deg);
+            }
+
+            40% {
+                transform:
+                    rotate(4deg);
+            }
+
+            60% {
+                transform:
+                    rotate(-3deg);
+            }
+
+            80% {
+                transform:
+                    rotate(3deg);
+            }
+
+        }
+
+
+        .gift-box {
+            position: absolute;
+
+            bottom: 0;
+
+            width: 180px;
+            height: 120px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ff477e,
+                    #ff006e
+                );
+
+            border-radius: 8px;
+
+            box-shadow:
+                0 0 30px
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.7
+                );
+        }
+
+
+        .gift-box::before {
+            content: "";
+
+            position: absolute;
+
+            left: 75px;
+
+            width: 30px;
+            height: 120px;
+
+            background:
+                linear-gradient(
+                    #ffe08a,
+                    #ffd166
+                );
+        }
+
+
+        .gift-lid {
+            position: absolute;
+
+            top: 10px;
+            left: -10px;
+
+            width: 200px;
+            height: 40px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ff477e,
+                    #ff006e
+                );
+
+            border-radius: 8px;
+
+            z-index: 5;
+        }
+
+
+        .gift-lid::before {
+            content: "";
+
+            position: absolute;
+
+            left: 85px;
+
+            width: 30px;
+            height: 40px;
+
+            background: #ffd166;
+        }
+
+
+        .bow-left,
+        .bow-right {
+            position: absolute;
+
+            top: -35px;
+
+            width: 65px;
+            height: 50px;
+
+            border:
+                15px solid
+                #ffd166;
+
+            border-radius: 50%;
+
+            z-index: 10;
+        }
+
+
+        .bow-left {
+            left: 30px;
+
+            transform:
+                rotate(30deg);
+        }
+
+
+        .bow-right {
+            right: 30px;
+
+            transform:
+                rotate(-30deg);
+        }
+
+
+        .click-text {
+            position: relative;
+
+            z-index: 20;
+
+            color: white;
+
+            margin-top: 55px;
+
+            font-size: 18px;
+
+            text-shadow:
+                0 0 10px white,
+                0 0 20px #ff9ee8;
+
+            animation:
+                blink
+                1s
+                infinite;
+        }
+
+
+        @keyframes blink {
+
+            50% {
+                opacity: 0.3;
+            }
+
+        }
+
+
+        /* ==================================================
+           SINH NHẬT
+        ================================================== */
+
+
+        #birthday-content {
+            position: fixed;
+
+            inset: 0;
+
+            display: none;
+
+            justify-content: center;
+            align-items: center;
+
+            flex-direction: column;
+
+            text-align: center;
+
+            z-index: 10;
+        }
+
+
+        .birthday-title {
+            color: white;
+
+            font-size:
+                clamp(
+                    35px,
+                    7vw,
+                    80px
+                );
+
+            text-shadow:
+                0 0 10px white,
+                0 0 20px #ff69b4,
+                0 0 50px #ff1493;
+
+            animation:
+                titleAppear
+                1.5s
+                ease,
+
+                titleFloat
+                2s
+                infinite
+                alternate;
+        }
+
+
+        @keyframes titleAppear {
+
+            from {
+                opacity: 0;
+
+                transform:
+                    scale(0);
+            }
+
+            to {
+                opacity: 1;
+
+                transform:
+                    scale(1);
+            }
+
+        }
+
+
+        @keyframes titleFloat {
+
+            from {
+                transform:
+                    translateY(0);
+            }
+
+            to {
+                transform:
+                    translateY(-12px);
+            }
+
+        }
+
+
+        #birthday-name {
+            color: white;
+
+            font-size: 28px;
+
+            margin-top: 15px;
+
+            text-shadow:
+                0 0 15px
+                #ff1493;
+        }
+
+
+        /* ==================================================
+           BÁNH
+        ================================================== */
+
+
+        .cake {
+            position: relative;
+
+            width: 240px;
+            height: 170px;
+
+            margin-top: 70px;
+
+            animation:
+                cakeAppear
+                1.5s
+                ease;
+        }
+
+
+        @keyframes cakeAppear {
+
+            from {
+                opacity: 0;
+
+                transform:
+                    translateY(300px)
+                    scale(0);
+            }
+
+            to {
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+
+        }
+
+
+        .cake-bottom {
+            position: absolute;
+
+            bottom: 0;
+
+            width: 240px;
+            height: 90px;
+
+            background: #ff9ecb;
+
+            border-radius:
+                15px
+                15px
+                25px
+                25px;
+
+            box-shadow:
+                0 0 30px
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.7
+                );
+        }
+
+
+        .cake-top {
+            position: absolute;
+
+            bottom: 70px;
+
+            width: 240px;
+            height: 45px;
+
+            background: #fff0f6;
+
+            border-radius: 50%;
+        }
+
+
+        .cream {
+            position: absolute;
+
+            top: 20px;
+
+            width: 25px;
+
+            height: 45px;
+
+            background: #fff0f6;
+
+            border-radius:
+                0
+                0
+                20px
+                20px;
+
+            z-index: 2;
+        }
+
+
+        .cream1 {
+            left: 25px;
+        }
+
+
+        .cream2 {
+            left: 100px;
+
+            height: 60px;
+        }
+
+
+        .cream3 {
+            right: 30px;
+
+            height: 50px;
+        }
+
+
+        .candle {
+            position: absolute;
+
+            width: 18px;
+            height: 65px;
+
+            left: 111px;
+
+            bottom: 110px;
+
+            background:
+                repeating-linear-gradient(
+                    45deg,
+                    #ff477e,
+                    #ff477e 8px,
+                    white 8px,
+                    white 16px
+                );
+
+            z-index: 5;
+        }
+
+
+        .flame {
+            position: absolute;
+
+            width: 25px;
+            height: 38px;
+
+            left: -3px;
+            top: -40px;
+
+            background: #ffd166;
+
+            border-radius:
+                50% 50%
+                50% 50%
+                /
+                70% 70%
+                30% 30%;
+
+            box-shadow:
+                0 0 10px yellow,
+                0 0 30px orange;
+
+            animation:
+                flame
+                0.3s
+                infinite
+                alternate;
+        }
+
+
+        @keyframes flame {
+
+            from {
+                transform:
+                    scale(1)
+                    rotate(-3deg);
+            }
+
+            to {
+                transform:
+                    scale(1.2)
+                    rotate(3deg);
+            }
+
+        }
+
+
+        /* ==================================================
+           CHỮ RƠI
+        ================================================== */
+
+
+        .falling-text {
+            position: fixed;
+
+            top: -60px;
+
+            color: white;
+
+            font-weight: bold;
+
+            white-space: nowrap;
+
+            z-index: 20;
+
+            pointer-events: none;
+
+            text-shadow:
+                0 0 10px pink,
+                0 0 20px #ff1493;
+
+            animation:
+                falling
+                linear
+                forwards;
+        }
+
+
+        @keyframes falling {
+
+            from {
+                transform:
+                    translateY(0)
+                    rotate(0deg);
+
+                opacity: 1;
+            }
+
+            to {
+                transform:
+                    translateY(115vh)
+                    rotate(360deg);
+
+                opacity: 0;
+            }
+
+        }
+
+
+        /* ==================================================
+           PHÁO HOA
+        ================================================== */
+
+
+        #fireworks {
+            position: fixed;
+
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            pointer-events: none;
+
+            z-index: 2;
+        }
+
+
+        /* ==================================================
+           NÚT NHẠC
+        ================================================== */
+
+
+        #music-button {
+            position: fixed;
+
+            right: 20px;
+            bottom: 20px;
+
+            width: 55px;
+            height: 55px;
+
+            border: none;
+
+            border-radius: 50%;
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.3
+                );
+
+            color: white;
+
+            font-size: 25px;
+
+            cursor: pointer;
+
+            z-index: 200;
+
+            display: none;
+
+            backdrop-filter:
+                blur(10px);
+        }
+
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ==================================================
+         MÀN HÌNH ĐẦU
+    =================================================== -->
+
+
+    <div id="welcome-screen">
+
+
+        <div class="welcome-card">
+
+
+            <div
+                class="photo-upload"
+                id="photo-upload"
+            >
+
+
+                <img
+                    src="birthday.jpg"
+                    id="birthday-photo"
+                    class="birthday-photo"
+                    alt="Ảnh sinh nhật"
+                >
+
+
+                <div class="photo-overlay">
+
+                    📷 Chọn ảnh
+
+                </div>
+
+
+                <input
+                    type="file"
+                    id="photo-input"
+                    accept="image/*"
+                    hidden
+                >
+
+
+            </div>
+
+
+            <h1>
+
+                🎀 Một điều bí mật 🎀
+
+            </h1>
+
+
+            <p>
+
+                Hãy cho mình biết
+                một chút về bạn nhé 💕
+
+            </p>
+
+
+            <div class="input-group">
+
+
+                <label>
+
+                    🌷 Tên của bạn
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="name-input"
+                    placeholder="Nhập tên..."
+                >
+
+
+            </div>
+
+
+            <div class="input-group">
+
+
+                <label>
+
+                    🎂 Ngày sinh nhật
+
+                </label>
+
+
+                <input
+                    type="date"
+                    id="birthday-input"
+                >
+
+
+            </div>
+
+
+            <button id="enter-button">
+
+                Mở điều bất ngờ 💌
+
+            </button>
+
+
+            <div id="error-message"></div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ==================================================
+         NGÂN HÀ + HỘP QUÀ
+    =================================================== -->
+
+
+    <div id="gift-screen">
+
+
+        <div class="galaxy"></div>
+
+
+        <h1 id="gift-title">
+
+            🎀 Có một món quà dành cho bạn 🎀
+
+        </h1>
+
+
+        <div
+            class="gift"
+            id="gift"
+        >
+
+
+            <div class="bow-left"></div>
+
+
+            <div class="bow-right"></div>
+
+
+            <div class="gift-lid"></div>
+
+
+            <div class="gift-box"></div>
+
+
+        </div>
+
+
+        <div class="click-text">
+
+            ✨ Click vào hộp quà ✨
+
+        </div>
+
+
+    </div>
+
+
+    <!-- PHÁO HOA -->
+
+
+    <canvas id="fireworks"></canvas>
+
+
+    <!-- ==================================================
+         NỘI DUNG SINH NHẬT
+    =================================================== -->
+
+
+    <div id="birthday-content">
+
+
+        <h1 class="birthday-title">
+
+            🎂 HAPPY BIRTHDAY 🎂
+
+        </h1>
+
+
+        <div id="birthday-name"></div>
+
+
+        <div class="cake">
+
+
+            <div class="candle">
+
+
+                <div class="flame"></div>
+
+
+            </div>
+
+
+            <div class="cake-bottom">
+
+
+                <div
+                    class="cream cream1"
+                ></div>
+
+
+                <div
+                    class="cream cream2"
+                ></div>
+
+
+                <div
+                    class="cream cream3"
+                ></div>
+
+
+            </div>
+
+
+            <div class="cake-top"></div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ==================================================
+         NHẠC
+    =================================================== -->
+
+
+    <audio
+        id="birthday-music"
+        loop
+    >
+
+
+        <source
+            src="birthday.mp3"
+            type="audio/mpeg"
+        >
+
+
+    </audio>
+
+
+    <button id="music-button">
+
+        🔊
+
+    </button>
+
+
+    <script>
+
+
+        /* ==================================================
+           ELEMENT
+        ================================================== */
+
+
+        const welcomeScreen =
+
+            document.getElementById(
+                "welcome-screen"
+            );
+
+
+        const photoUpload =
+
+            document.getElementById(
+                "photo-upload"
+            );
+
+
+        const photoInput =
+
+            document.getElementById(
+                "photo-input"
+            );
+
+
+        const birthdayPhoto =
+
+            document.getElementById(
+                "birthday-photo"
+            );
+
+
+        const nameInput =
+
+            document.getElementById(
+                "name-input"
+            );
+
+
+        const birthdayInput =
+
+            document.getElementById(
+                "birthday-input"
+            );
+
+
+        const enterButton =
+
+            document.getElementById(
+                "enter-button"
+            );
+
+
+        const errorMessage =
+
+            document.getElementById(
+                "error-message"
+            );
+
+
+        const giftScreen =
+
+            document.getElementById(
+                "gift-screen"
+            );
+
+
+        const gift =
+
+            document.getElementById(
+                "gift"
+            );
+
+
+        const giftTitle =
+
+            document.getElementById(
+                "gift-title"
+            );
+
+
+        const birthdayContent =
+
+            document.getElementById(
+                "birthday-content"
+            );
+
+
+        const birthdayName =
+
+            document.getElementById(
+                "birthday-name"
+            );
+
+
+        const music =
+
+            document.getElementById(
+                "birthday-music"
+            );
+
+
+        const musicButton =
+
+            document.getElementById(
+                "music-button"
+            );
+
+
+        let userName = "";
+
+
+        let musicPlaying = true;
+
+
+        let birthdayStarted = false;
+
+
+        /* ==================================================
+           CHỌN ẢNH
+        ================================================== */
+
+
+        photoUpload.addEventListener(
+
+            "click",
+
+            () => {
+
+
+                photoInput.click();
+
+
+            }
+
+        );
+
+
+        photoInput.addEventListener(
+
+            "change",
+
+            () => {
+
+
+                const file =
+
+                    photoInput.files[0];
+
+
+                if (!file) {
+
+                    return;
+
+                }
+
+
+                if (
+
+                    !file.type.startsWith(
+                        "image/"
+                    )
+
+                ) {
+
+
+                    errorMessage.innerText =
+
+                        "📷 Vui lòng chọn một file ảnh";
+
+
+                    return;
+
+                }
+
+
+                const imageURL =
+
+                    URL.createObjectURL(
+                        file
+                    );
+
+
+                birthdayPhoto.src =
+
+                    imageURL;
+
+
+                errorMessage.innerText =
+
+                    "💕 Ảnh xinh đã được chọn";
+
+
+            }
+
+        );
+
+
+        /* ==================================================
+           TẠO SAO NGÂN HÀ
+        ================================================== */
+
+
+        function createGalaxyStars() {
+
+
+            for (
+
+                let i = 0;
+
+                i < 220;
+
+                i++
+
+            ) {
+
+
+                const star =
+
+                    document.createElement(
+                        "div"
+                    );
+
+
+                star.classList.add(
+                    "galaxy-star"
+                );
+
+
+                const size =
+
+                    Math.random() * 3 + 1;
+
+
+                star.style.width =
+
+                    size + "px";
+
+
+                star.style.height =
+
+                    size + "px";
+
+
+                star.style.left =
+
+                    Math.random() * 100 + "%";
+
+
+                star.style.top =
+
+                    Math.random() * 100 + "%";
+
+
+                star.style.animationDuration =
+
+                    Math.random() * 2
+
+                    + 0.5 + "s";
+
+
+                star.style.animationDelay =
+
+                    Math.random() * 3
+
+                    + "s";
+
+
+                giftScreen.appendChild(
+                    star
+                );
+
+
+            }
+
+
+        }
+
+
+        createGalaxyStars();
+
+
+        /* ==================================================
+           SAO BĂNG
+        ================================================== */
+
+
+        function createShootingStar() {
+
+
+            const star =
+
+                document.createElement(
+                    "div"
+                );
+
+
+            star.classList.add(
+                "shooting-star"
+            );
+
+
+            star.style.left =
+
+                Math.random() * 30 + "%";
+
+
+            star.style.top =
+
+                Math.random() * 40 + "%";
+
+
+            star.style.animationDuration =
+
+                Math.random() * 1.5
+
+                + 1.2 + "s";
+
+
+            giftScreen.appendChild(
+                star
+            );
+
+
+            setTimeout(
+
+                () => {
+
+
+                    star.remove();
+
+
+                },
+
+                3000
+
+            );
+
+
+        }
+
+
+        setInterval(
+
+            () => {
+
+
+                if (
+
+                    giftScreen.style.display
+
+                    === "flex"
+
+                ) {
+
+
+                    createShootingStar();
+
+
+                }
+
+
+            },
+
+            1200
+
+        );
+
+
+        /* ==================================================
+           NÚT MỞ ĐIỀU BẤT NGỜ
+        ================================================== */
+
+
+        enterButton.addEventListener(
+
+            "click",
+
+            () => {
+
+
+                userName =
+
+                    nameInput.value.trim();
+
+
+                const birthday =
+
+                    birthdayInput.value;
+
+
+                if (
+
+                    userName === ""
+
+                ) {
+
+
+                    errorMessage.innerText =
+
+                        "🌷 Bạn chưa nhập tên kìa";
+
+
+                    return;
+
+                }
+
+
+                if (
+
+                    birthday === ""
+
+                ) {
+
+
+                    errorMessage.innerText =
+
+                        "🎂 Bạn chưa chọn ngày sinh nhật";
+
+
+                    return;
+
+                }
+
+
+                errorMessage.innerText = "";
+
+
+                welcomeScreen.style.opacity =
+
+                    "0";
+
+
+                setTimeout(
+
+                    () => {
+
+
+                        welcomeScreen.style.display =
+
+                            "none";
+
+
+                        giftScreen.style.display =
+
+                            "flex";
+
+
+                        giftTitle.innerText =
+
+                            "🎁 "
+
+                            + userName
+
+                            + " ơi, có một món quà dành cho bạn 🎁";
+
+
+                    },
+
+                    1000
+
+                );
+
+
+            }
+
+        );
+
+
+        /* ==================================================
+           CLICK HỘP QUÀ
+        ================================================== */
+
+
+        gift.addEventListener(
+
+            "click",
+
+            () => {
+
+
+                if (
+
+                    birthdayStarted
+
+                ) {
+
+
+                    return;
+
+
+                }
+
+
+                birthdayStarted = true;
+
+
+                gift.style.animation =
+
+                    "none";
+
+
+                gift.style.transform =
+
+                    "scale(1.5)";
+
+
+                music.play()
+
+                    .then(
+
+                        () => {
+
+
+                            musicPlaying = true;
+
+
+                            musicButton.innerText =
+
+                                "🔊";
+
+
+                        }
+
+                    )
+
+                    .catch(
+
+                        () => {
+
+
+                            musicPlaying = false;
+
+
+                            musicButton.innerText =
+
+                                "🔇";
+
+
+                        }
+
+                    );
+
+
+                setTimeout(
+
+                    () => {
+
+
+                        giftScreen.style.opacity =
+
+                            "0";
+
+
+                    },
+
+                    300
+
+                );
+
+
+                setTimeout(
+
+                    () => {
+
+
+                        giftScreen.style.display =
+
+                            "none";
+
+
+                        birthdayContent.style.display =
+
+                            "flex";
+
+
+                        musicButton.style.display =
+
+                            "block";
+
+
+                        birthdayName.innerText =
+
+                            "Chúc "
+
+                            + userName
+
+                            + " có một tuổi mới thật rực rỡ 💕";
+
+
+                        startBirthday();
+
+
+                    },
+
+                    1300
+
+                );
+
+
+            }
+
+        );
+
+
+        /* ==================================================
+           CHỮ RƠI
+        ================================================== */
+
+
+        function createFallingText() {
+
+
+            const messages = [
+
+
+                "Happy Birthday 🎂",
+
+
+                userName + " 💕",
+
+
+                "Tuổi mới rực rỡ ✨",
+
+
+                "Luôn hạnh phúc 🌸",
+
+
+                "Mãi xinh đẹp 💗",
+
+
+                "Best Wishes 🎀",
+
+
+                "Luôn vui vẻ 🌷",
+
+
+                "Love You 💕"
+
+
+            ];
+
+
+            const text =
+
+                document.createElement(
+                    "div"
+                );
+
+
+            text.classList.add(
+                "falling-text"
+            );
+
+
+            text.innerText =
+
+                messages[
+
+                    Math.floor(
+
+                        Math.random()
+
+                        * messages.length
+
+                    )
+
+                ];
+
+
+            text.style.left =
+
+                Math.random() * 90
+
+                + "vw";
+
+
+            text.style.fontSize =
+
+                Math.random() * 15
+
+                + 15 + "px";
+
+
+            text.style.animationDuration =
+
+                Math.random() * 4
+
+                + 4 + "s";
+
+
+            document.body.appendChild(
+                text
+            );
+
+
+            setTimeout(
+
+                () => {
+
+
+                    text.remove();
+
+
+                },
+
+                8000
+
+            );
+
+
+        }
+
+
+        function startFallingText() {
+
+
+            setInterval(
+
+                createFallingText,
+
+                300
+
+            );
+
+
+        }
+
+
+        /* ==================================================
+           NHẠC
+        ================================================== */
+
+
+        musicButton.addEventListener(
+
+            "click",
+
+            () => {
+
+
+                if (
+
+                    musicPlaying
+
+                ) {
+
+
+                    music.pause();
+
+
+                    musicButton.innerText =
+
+                        "🔇";
+
+
+                    musicPlaying = false;
+
+
+                }
+
+                else {
+
+
+                    music.play();
+
+
+                    musicButton.innerText =
+
+                        "🔊";
+
+
+                    musicPlaying = true;
+
+
+                }
+
+
+            }
+
+        );
+
+
+        /* ==================================================
+           PHÁO HOA
+        ================================================== */
+
+
+        const canvas =
+
+            document.getElementById(
+                "fireworks"
+            );
+
+
+        const ctx =
+
+            canvas.getContext(
+                "2d"
+            );
+
+
+        function resizeCanvas() {
+
+
+            canvas.width =
+
+                window.innerWidth;
+
+
+            canvas.height =
+
+                window.innerHeight;
+
+
+        }
+
+
+        resizeCanvas();
+
+
+        window.addEventListener(
+
+            "resize",
+
+            resizeCanvas
+
+        );
+
+
+        let particles = [];
+
+
+        class Particle {
+
+
+            constructor(
+
+                x,
+
+                y,
+
+                color
+
+            ) {
+
+
+                this.x = x;
+
+
+                this.y = y;
+
+
+                this.color = color;
+
+
+                const angle =
+
+                    Math.random()
+
+                    * Math.PI
+
+                    * 2;
+
+
+                const speed =
+
+                    Math.random()
+
+                    * 6
+
+                    + 2;
+
+
+                this.vx =
+
+                    Math.cos(angle)
+
+                    * speed;
+
+
+                this.vy =
+
+                    Math.sin(angle)
+
+                    * speed;
+
+
+                this.alpha = 1;
+
+
+                this.gravity = 0.05;
+
+
+            }
+
+
+            update() {
+
+
+                this.vy +=
+
+                    this.gravity;
+
+
+                this.x +=
+
+                    this.vx;
+
+
+                this.y +=
+
+                    this.vy;
+
+
+                this.alpha -=
+
+                    0.015;
+
+
+            }
+
+
+            draw() {
+
+
+                ctx.save();
+
+
+                ctx.globalAlpha =
+
+                    this.alpha;
+
+
+                ctx.beginPath();
+
+
+                ctx.arc(
+
+                    this.x,
+
+                    this.y,
+
+                    3,
+
+                    0,
+
+                    Math.PI * 2
+
+                );
+
+
+                ctx.fillStyle =
+
+                    this.color;
+
+
+                ctx.fill();
+
+
+                ctx.restore();
+
+
+            }
+
+
+        }
+
+
+        function createFirework() {
+
+
+            const colors = [
+
+
+                "#ff477e",
+
+
+                "#ffd166",
+
+
+                "#06d6a0",
+
+
+                "#118ab2",
+
+
+                "#ffffff",
+
+
+                "#c77dff"
+
+
+            ];
+
+
+            const x =
+
+                Math.random()
+
+                * canvas.width;
+
+
+            const y =
+
+                Math.random()
+
+                * canvas.height
+
+                * 0.6;
+
+
+            const color =
+
+                colors[
+
+                    Math.floor(
+
+                        Math.random()
+
+                        * colors.length
+
+                    )
+
+                ];
+
+
+            for (
+
+                let i = 0;
+
+                i < 80;
+
+                i++
+
+            ) {
+
+
+                particles.push(
+
+
+                    new Particle(
+
+                        x,
+
+                        y,
+
+                        color
+
+                    )
+
+
+                );
+
+
+            }
+
+
+        }
+
+
+        function animateFireworks() {
+
+
+            ctx.clearRect(
+
+                0,
+
+                0,
+
+                canvas.width,
+
+                canvas.height
+
+            );
+
+
+            particles.forEach(
+
+                (
+
+                    particle,
+
+                    index
+
+                ) => {
+
+
+                    particle.update();
+
+
+                    particle.draw();
+
+
+                    if (
+
+                        particle.alpha <= 0
+
+                    ) {
+
+
+                        particles.splice(
+
+                            index,
+
+                            1
+
+                        );
+
+
+                    }
+
+
+                }
+
+            );
+
+
+            requestAnimationFrame(
+
+                animateFireworks
+
+            );
+
+
+        }
+
+
+        function startFireworks() {
+
+
+            animateFireworks();
+
+
+            setInterval(
+
+                () => {
+
+
+                    createFirework();
+
+
+                },
+
+                700
+
+            );
+
+
+        }
+
+
+        /* ==================================================
+           BẮT ĐẦU SINH NHẬT
+        ================================================== */
+
+
+        function startBirthday() {
+
+
+            startFallingText();
+
+
+            startFireworks();
+
+
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>
+```
