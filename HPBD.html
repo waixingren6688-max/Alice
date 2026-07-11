@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🎂 Sinh Nhật Sống Động - Tương Tác</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #0b0b2b 0%, #1a1a4e 40%, #2d1b69 100%);
+            font-family: 'Quicksand', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ===== CẢNH BÁO / THÔNG BÁO ===== */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .setup-box {
+            background: rgba(255, 215, 150, 0.12);
+            backdrop-filter: blur(20px);
+            border-radius: 60px;
+            padding: 3rem 4rem;
+            max-width: 550px;
+            width: 92%;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 0 2px rgba(255, 215, 0, 0.2) inset;
+            text-align: center;
+            color: #fff5d6;
+            animation: cardGlow 3s infinite alternate ease-in-out;
+        }
+
+        @keyframes cardGlow {
+            0% { box-shadow: 0 30px 50px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(255, 215, 0, 0.2) inset; }
+            100% { box-shadow: 0 30px 70px rgba(255, 200, 50, 0.4), 0 0 0 4px rgba(255, 215, 0, 0.5) inset; }
+        }
+
+        .setup-box h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.2rem;
+            color: #ffe28c;
+            text-shadow: 0 0 20px #ffb347;
+            margin-bottom: 1.5rem;
+        }
+
+        .setup-box label {
+            display: block;
+            font-size: 1.2rem;
+            margin: 1.2rem 0 0.5rem;
+            font-weight: 700;
+            color: #fae3b3;
+        }
+
+        .setup-box input[type="text"],
+        .setup-box input[type="number"] {
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            background: rgba(0, 0, 0, 0.4);
+            color: #fff5d6;
+            font-size: 1.2rem;
+            outline: none;
+            transition: all 0.3s;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .setup-box input:focus {
+            border-color: #ffb347;
+            box-shadow: 0 0 25px rgba(255, 180, 50, 0.3);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .setup-box input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 50px;
+            border: 2px dashed rgba(255, 215, 0, 0.4);
+            background: rgba(0, 0, 0, 0.3);
+            color: #fae3b3;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .setup-box input[type="file"]:hover {
+            border-color: #ffb347;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .preview-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #ffb347;
+            margin: 15px auto;
+            display: block;
+            background: #2a1f4e;
+            box-shadow: 0 0 40px rgba(255, 180, 50, 0.3);
+        }
+
+        .btn-start {
+            background: linear-gradient(145deg, #f7d875, #ff9a56);
+            border: none;
+            color: #1a1a4e;
+            font-size: 1.6rem;
+            font-weight: 700;
+            padding: 16px 45px;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 30px rgba(255, 180, 50, 0.3);
+            font-family: 'Quicksand', sans-serif;
+            margin-top: 25px;
+            letter-spacing: 2px;
+        }
+
+        .btn-start:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(255, 180, 50, 0.6);
+            background: linear-gradient(145deg, #ffe28c, #ffb347);
+        }
+
+        /* ===== THIỆP CHÍNH (ẩn lúc đầu) ===== */
+        #mainCard {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            z-index: 20;
+        }
+
+        #mainCard.show {
+            display: flex;
+        }
+
+        .birthday-card {
+            background: rgba(255, 215, 150, 0.15);
+            backdrop-filter: blur(12px);
+            border-radius: 60px 60px 40px 40px;
+            padding: 2.5rem 3.5rem;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(255, 215, 0, 0.2) inset;
+            text-align: center;
+            max-width: 750px;
+            width: 100%;
+            border: 1px solid rgba(255, 220, 100, 0.3);
+            animation: cardGlow 3s infinite alternate ease-in-out;
+            position: relative;
+        }
+
+        .avatar-card {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #ffb347;
+            margin: 0 auto 15px;
+            display: block;
+            box-shadow: 0 0 50px rgba(255, 180, 50, 0.4);
+        }
+
+        .title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            color: #ffe28c;
+            text-shadow: 0 0 15px #ffb347, 0 0 30px #ff7e5f;
+            letter-spacing: 4px;
+            margin-bottom: 5px;
+            animation: titlePulse 2s infinite alternate;
+        }
+
+        @keyframes titlePulse {
+            0% { text-shadow: 0 0 10px #ffb347, 0 0 25px #ff7e5f; transform: scale(1); }
+            100% { text-shadow: 0 0 25px #ffe68f, 0 0 50px #ff9a56; transform: scale(1.02); }
+        }
+
+        .sub-message {
+            color: #fae3b3;
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: rgba(0, 0, 0, 0.3);
+            display: inline-block;
+            padding: 0.3rem 2rem;
+            border-radius: 50px;
+            backdrop-filter: blur(4px);
+            margin-top: 0.5rem;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .name {
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #f7d875, #ffb347);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 180, 50, 0.5);
+            margin: 10px 0 5px;
+        }
+
+        .age-display {
+            font-size: 2rem;
+            color: #fff5d6;
+            background: rgba(255, 200, 100, 0.15);
+            padding: 8px 25px;
+            border-radius: 50px;
+            display: inline-block;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .gift-box {
+            margin: 25px auto 15px;
+            font-size: 4.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+            filter: drop-shadow(0 0 25px #ffb347);
+            animation: giftFloat 2s infinite alternate ease-in-out;
+            background: rgba(255, 200, 100, 0.1);
+            padding: 10px 30px;
+            border-radius: 60px;
+            border: 2px solid rgba(255, 215, 0, 0.2);
+        }
+
+        @keyframes giftFloat {
+            0% { transform: translateY(0px) scale(1); }
+            100% { transform: translateY(-10px) scale(1.05); }
+        }
+
+        .gift-box:hover {
+            transform: scale(1.15) !important;
+            filter: drop-shadow(0 0 50px #ffb347);
+            background: rgba(255, 200, 100, 0.2);
+        }
+
+        .footer-message {
+            font-size: 1.1rem;
+            color: #d9c8a2;
+            margin-top: 20px;
+            border-top: 1px dashed rgba(255, 215, 0, 0.3);
+            padding-top: 18px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .footer-message span {
+            background: rgba(255, 200, 100, 0.15);
+            padding: 5px 18px;
+            border-radius: 40px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        /* ===== HIỆU ỨNG CHỮ RƠI ===== */
+        .falling-text-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        .falling-item {
+            position: absolute;
+            top: -80px;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #fff3c9;
+            text-shadow: 0 0 20px #ffb347, 0 0 40px #ff7e5f;
+            font-family: 'Dancing Script', cursive;
+            opacity: 0.9;
+            white-space: nowrap;
+            animation: fall linear infinite;
+            will-change: transform;
+            letter-spacing: 2px;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 0.9; }
+            70% { opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg) scale(1.3); opacity: 0.2; }
+        }
+
+        /* ===== SPARKLE ===== */
+        .sparkle {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 5;
+            animation: sparkleFloat 8s infinite alternate ease-in-out;
+        }
+
+        @keyframes sparkleFloat {
+            0% { opacity: 0.2; transform: translateY(0px) scale(0.5); }
+            100% { opacity: 0.9; transform: translateY(-30px) scale(1.5); }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 650px) {
+            .setup-box { padding: 2rem 1.5rem; }
+            .setup-box h1 { font-size: 2.2rem; }
+            .birthday-card { padding: 1.5rem 1.2rem; }
+            .title { font-size: 2.8rem; }
+            .sub-message { font-size: 1.2rem; }
+            .name { font-size: 2rem; }
+            .gift-box { font-size: 3.5rem; padding: 8px 20px; }
+            .falling-item { font-size: 1.6rem; }
+            .btn-start { font-size: 1.2rem; padding: 14px 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== OVERLAY NHẬP THÔNG TIN ===== -->
+    <div id="setupOverlay" class="overlay">
+        <div class="setup-box">
+            <h1>🎉 Happy Alice's Birthday 🎉</h1>
+            <label>📸 Chọn ảnh đi nè </label>
+            <input type="file" id="avatarInput" accept="image/*" />
+            <img id="previewAvatar" class="preview-avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='90' fill='%232a1f4e' stroke='%23ffb347' stroke-width='6'/%3E%3Ctext x='50' y='115' font-family='Arial' font-size='80' fill='%23ffb347'%3E🎂%3C/text%3E%3C/svg%3E" alt="Avatar" />
+
+            <label>👤 My name is </label>
+            <input type="text" id="nameInput" placeholder="Nhập tên..." value="Nguyễn Văn A" />
+
+            <label>🎂 Năm nay tui đã </label>
+            <input type="number" id="ageInput" placeholder="Nhập số tuổi" value="25" min="1" max="120" />
+
+            <button class="btn-start" id="startBtn">✨ Bắt Đầu Tiệc ✨</button>
+        </div>
+    </div>
+
+    <!-- ===== THIỆP CHÍNH ===== -->
+    <div id="mainCard">
+        <div class="birthday-card">
+            <img id="avatarDisplay" class="avatar-card" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='90' fill='%232a1f4e' stroke='%23ffb347' stroke-width='6'/%3E%3Ctext x='50' y='115' font-family='Arial' font-size='80' fill='%23ffb347'%3E🎂%3C/text%3E%3C/svg%3E" alt="Avatar" />
+
+            <div class="title">🎉 Chúc Mừng 🎉</div>
+            <div class="sub-message">✨ Sinh Nhật Vui Vẻ ✨</div>
+            <div class="name" id="displayName">💖 Nguyễn Văn A 💖</div>
+            <div class="age-display" id="displayAge">🎂 25 tuổi</div>
+
+            <!-- HỘP QUÀ - CLICK ĐỂ MỞ CHÚC MỪNG -->
+            <div class="gift-box" id="giftBox">
+                🎁
+            </div>
+            <div style="font-size: 0.9rem; color: #ffdbb5; margin-top: 5px; opacity: 0.7;">👆 Click vào quà để nhận lời chúc</div>
+
+            <div class="footer-message">
+                <span>🎈 Ước mơ bay cao</span>
+                <span>🎁 Ngập tràn niềm vui</span>
+                <span>🌟 Rực rỡ tương lai</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CHỮ RƠI ===== -->
+    <div id="fallingContainer" class="falling-text-container"></div>
+    <div id="sparkles"></div>
+
+    <script>
+        (function() {
+            // ========== LẤY ELEMENTS ==========
+            const overlay = document.getElementById('setupOverlay');
+            const startBtn = document.getElementById('startBtn');
+            const mainCard = document.getElementById('mainCard');
+
+            const nameInput = document.getElementById('nameInput');
+            const ageInput = document.getElementById('ageInput');
+            const avatarInput = document.getElementById('avatarInput');
+            const previewAvatar = document.getElementById('previewAvatar');
+
+            const displayName = document.getElementById('displayName');
+            const displayAge = document.getElementById('displayAge');
+            const avatarDisplay = document.getElementById('avatarDisplay');
+            const giftBox = document.getElementById('giftBox');
+
+            // ========== XEM TRƯỚC ẢNH ==========
+            avatarInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(ev) {
+                        previewAvatar.src = ev.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // ========== BẮT ĐẦU TIỆC ==========
+            startBtn.addEventListener('click', function() {
+                const name = nameInput.value.trim() || 'Bạn';
+                const age = parseInt(ageInput.value) || 25;
+
+                // Cập nhật thiệp
+                displayName.textContent = `💖 ${name} 💖`;
+                displayAge.textContent = `🎂 ${age} tuổi`;
+
+                // Nếu có ảnh đại diện thì chuyển sang thẻ chính
+                if (previewAvatar.src && !previewAvatar.src.includes('svg')) {
+                    avatarDisplay.src = previewAvatar.src;
+                } else {
+                    // giữ avatar mặc định
+                }
+
+                // Ẩn overlay, hiện thiệp
+                overlay.classList.add('hidden');
+                mainCard.classList.add('show');
+
+                // Bắt đầu hiệu ứng chữ rơi (nếu chưa có)
+                if (document.querySelectorAll('.falling-item').length === 0) {
+                    createFallingTexts();
+                }
+                // Tạo sparkle nếu chưa có
+                if (document.querySelectorAll('.sparkle').length === 0) {
+                    createSparkles();
+                }
+            });
+
+            // ========== CLICK VÀO QUÀ ==========
+            giftBox.addEventListener('click', function() {
+                // Tạo hiệu ứng bắn pháo hoa chữ / lời chúc
+                const messages = [
+                    '🎉 Chúc mừng!', '🥳 Happy Birthday!',
+                    '💖 Hạnh phúc!', '🌟 Thành công!',
+                    '🎂 Tuổi mới an lành!', '✨ Vạn sự như ý!',
+                    '🌺 Sức khỏe dồi dào!', '🍀 May mắn ngập tràn!'
+                ];
+                // Chọn ngẫu nhiên 3-5 lời chúc
+                const count = 3 + Math.floor(Math.random() * 3);
+                const chosen = [];
+                for (let i = 0; i < count; i++) {
+                    const idx = Math.floor(Math.random() * messages.length);
+                    chosen.push(messages[idx]);
+                }
+
+                // Tạo các phần tử bay lên từ vị trí hộp quà
+                const rect = giftBox.getBoundingClientRect();
+                const cx = rect.left + rect.width / 2;
+                const cy = rect.top + rect.height / 2;
+
+                chosen.forEach((msg, index) => {
+                    const el = document.createElement('div');
+                    el.textContent = msg;
+                    el.style.position = 'fixed';
+                    el.style.left = cx + 'px';
+                    el.style.top = cy + 'px';
+                    el.style.fontSize = (1.8 + Math.random() * 1.5) + 'rem';
+                    el.style.fontWeight = 'bold';
+                    el.style.color = '#fff5d6';
+                    el.style.textShadow = '0 0 30px #ffb347, 0 0 60px #ff7e5f';
+                    el.style.fontFamily = "'Dancing Script', cursive";
+                    el.style.pointerEvents = 'none';
+                    el.style.zIndex = '999';
+                    el.style.transition = 'all 1.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                    el.style.opacity = '1';
+                    document.body.appendChild(el);
+
+                    // Bay ngẫu nhiên
+                    const angle = (Math.random() - 0.5) * Math.PI * 0.8;
+                    const dist = 150 + Math.random() * 250;
+                    const dx = Math.sin(angle) * dist;
+                    const dy = -Math.cos(angle) * dist - 100;
+
+                    requestAnimationFrame(() => {
+                        el.style.transform = `translate(${dx}px, ${dy}px) scale(1.5)`;
+                        el.style.opacity = '0';
+                    });
+
+                    // Xóa sau khi bay
+                    setTimeout(() => {
+                        el.remove();
+                    }, 1800);
+                });
+
+                // Đổi icon quà thành 🎁✨
+                giftBox.textContent = '🎁✨';
+                setTimeout(() => {
+                    giftBox.textContent = '🎁';
+                }, 1000);
+
+                // Rung nhẹ hộp quà
+                giftBox.style.animation = 'none';
+                setTimeout(() => {
+                    giftBox.style.animation = 'giftFloat 2s infinite alternate ease-in-out';
+                }, 10);
+            });
+
+            // ========== TẠO CHỮ RƠI ==========
+            function createFallingTexts() {
+                const container = document.getElementById('fallingContainer');
+                const words = [
+                    '🎂', '🎉', '🎈', '✨', '🎁', '🎊',
+                    '❤️', '💖', '🌟', '🥳', '🎇', '🎆',
+                    'Happy', 'Birthday', 'Chúc Mừng', 'Sinh Nhật',
+                    'Vui Vẻ', 'Hạnh Phúc', 'Tuổi Mới', 'Thành Công',
+                    '💫', '🌸', '🌺', '🍀', '🌈'
+                ];
+                const ITEM_COUNT = 40;
+
+                for (let i = 0; i < ITEM_COUNT; i++) {
+                    const span = document.createElement('span');
+                    span.className = 'falling-item';
+                    const randomIndex = Math.floor(Math.random() * words.length);
+                    span.textContent = words[randomIndex];
+                    const size = 1.5 + Math.random() * 2.5;
+                    span.style.fontSize = size + 'rem';
+                    span.style.left = Math.random() * 95 + '%';
+                    span.style.animationDuration = 7 + Math.random() * 9 + 's';
+                    span.style.animationDelay = Math.random() * 12 + 's';
+                    const hue = 30 + Math.random() * 30;
+                    span.style.color = `hsl(${hue}, ${80+Math.random()*20}%, ${70+Math.random()*30}%)`;
+                    span.style.textShadow = `0 0 20px hsl(${hue}, 100%, 60%), 0 0 40px hsl(${hue+20}, 100%, 50%)`;
+                    span.style.transform = `rotate(${(Math.random()-0.5)*30}deg)`;
+                    container.appendChild(span);
+                }
+            }
+
+            // ========== TẠO SPARKLE ==========
+            function createSparkles() {
+                const container = document.getElementById('sparkles');
+                for (let i = 0; i < 50; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'sparkle';
+                    const size = 3 + Math.random() * 8;
+                    dot.style.width = size + 'px';
+                    dot.style.height = size + 'px';
+                    dot.style.left = Math.random() * 100 + '%';
+                    dot.style.top = Math.random() * 100 + '%';
+                    dot.style.animationDelay = Math.random() * 10 + 's';
+                    dot.style.animationDuration = 6 + Math.random() * 10 + 's';
+                    const hue = 40 + Math.random() * 30;
+                    dot.style.background = `hsl(${hue}, 100%, 75%)`;
+                    dot.style.boxShadow = `0 0 ${size*2}px hsl(${hue}, 100%, 70%)`;
+                    container.appendChild(dot);
+                }
+            }
+
+            // ========== KHỞI TẠO MẶC ĐỊNH ==========
+            // Tạo chữ rơi và sparkle ngay từ đầu (nhưng ẩn dưới overlay)
+            createFallingTexts();
+            createSparkles();
+
+            // Nếu nhấn Enter trong input cũng kích hoạt
+            document.querySelectorAll('.setup-box input').forEach(inp => {
+                inp.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        startBtn.click();
+                    }
+                });
+            });
+
+            // ========== XỬ LÝ LỖI ẢNH ==========
+            // Nếu ảnh không load được thì dùng default
+            avatarDisplay.addEventListener('error', function() {
+                this.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='90' fill='%232a1f4e' stroke='%23ffb347' stroke-width='6'/%3E%3Ctext x='50' y='115' font-family='Arial' font-size='80' fill='%23ffb347'%3E🎂%3C/text%3E%3C/svg%3E";
+            });
+        })();
+    </script>
+
+</body>
+</html>
