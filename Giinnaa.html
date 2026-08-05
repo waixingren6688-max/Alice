@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday GINA💖!</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #fef08a;
+            color: #333;
+            overflow-x: hidden;
+            width: 100%;
+            min-height: 100vh;
+            margin: 0 !important;
+            padding: 0 !important ;
+        }
+
+        .screen {
+            display: none !important; 
+            width: 100%;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .screen.active {
+            position: relative !important; /* Tạo điểm mốc vị trí */
+            overflow: hidden;             /* Tránh bị hiện thanh cuộn nếu trang trí hơi tràn */
+  /* Các thuộc tính căn giữa giữ nguyên */
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .screen.hidden-screen {
+            display: none !important;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* ===== NÚT NHẠC DÙNG CHUNG ===== */
+        .music-control-btn {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #facc15;
+            border: 3px solid #854d0e;
+            color: #854d0e;
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 9999;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .music-control-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .music-rotate {
+            animation: musicSpin 3s linear infinite;
+        }
+
+        @keyframes musicSpin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ================= SCREEN 1: TRANG ĐĂNG NHẬP (TONE VÀNG) ================= */
+        #screen1 {
+            background: linear-gradient(135deg, #fef08a 0%, #fde047 100%);
+            padding: 20px;
+        }
+
+        .phone-card {
+            background: #ffffff;
+            padding: 25px 20px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(234, 179, 8, 0.35);
+            width: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 4px solid #facc15;
+        }
+
+        .avatar-upload {
+            position: relative;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .avatar-preview {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #facc15;
+            background: #fef9c3;
+        }
+
+        .avatar-hint {
+            font-size: 11px;
+            color: #ca8a04;
+            margin-top: 2px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .passcode-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #854d0e;
+            margin-bottom: 8px;
+        }
+
+        .passcode-display {
+            display: flex;
+            gap: 12px;
+            margin: 10px 0 20px 0;
+        }
+
+        .dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid #eab308;
+            transition: all 0.2s ease;
+        }
+
+        .dot.filled {
+            background-color: #eab308;
+            transform: scale(1.1);
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            width: 100%;
+            padding: 0 10px;
+        }
+
+        .key-btn {
+            aspect-ratio: 1;
+            border-radius: 50%;
+            border: none;
+            background: #fef9c3;
+            color: #854d0e;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .key-btn:active {
+            background: #fde047;
+            transform: scale(0.92);
+        }
+
+        .key-btn.action {
+            font-size: 13px;
+            background: transparent;
+            box-shadow: none;
+            color: #ca8a04;
+        }
+
+        .error-msg {
+            color: #ef4444;
+            font-size: 12px;
+            height: 18px;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        /* ================= SCREEN 2: RẠP PHIM (NỀN ĐEN, GHẾ ĐỎ) ================= */
+        #screen2 {
+            background-color: #0d0d0d;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+            display: flex !important;
+            flex-direction: column;   /* Xếp các phần tử theo chiều dọc từ trên xuống */
+            align-items: center;     /* Căn giữa tất cả nội dung theo chiều ngang */
+            justify-content: center; /* Căn giữa theo chiều dọc */
+            gap: 20px;               /* Tạo khoảng cách đẹp giữa màn hình phim và sơ đồ ghế */
+            padding: 40px 10px;
+            min-height: 100vh;       /* Phủ kín chiều cao màn hình */
+            box-sizing: border-box;
+        }
+
+        /* Tăng kích thước khung chứa màn hình rạp phim */
+        .cinema-screen-wrapper {
+            width: 80% !important;        /* Chỉnh từ 50% lên 80% hoặc 90% tùy độ to bà thích */
+            max-width: 800px !important;  /* Giới hạn độ rộng tối đa */
+            margin: 0 auto 20px auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); /* Tạo hiệu ứng phát sáng cho màn hình */
+        }
+
+        /* Ép video/iframe lấp đầy khung to */
+        .cinema-video {
+            width: 100% !important;
+            height: auto;
+            aspect-ratio: 16 / 9;         /* Tỉ lệ màn hình chuẩn 16:9 */
+            display: block;
+            object-fit: cover;
+        }
+
+        .cinema-screen {
+            background: #ffffff;
+            color: #111;
+            border-radius: 12px;
+            padding: 25px 15px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.8), 0 10px 20px rgba(0,0,0,0.5);
+            transform: rotateX(-5deg);
+            border: 4px solid #e2e8f0;
+        }
+
+        .cinema-screen h1 {
+            font-size: 26px;
+            color: #1e293b;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        .duck-gif {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+        }
+
+        /* Ghế rạp phim */
+        .cinema-seats {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 25px;
+            align-items: center;
+        }
+
+        .seat-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .seat {
+            width: 50px;
+            height: 50px;
+            background-color: #991b1b;
+            border-radius: 8px 8px 4px 4px;
+            box-shadow: inset 0 -4px 0 #7f1d1d, 0 4px 8px rgba(0,0,0,0.6);
+            position: relative;
+        }
+
+        /* Người ngồi xem phim */
+        .seat.occupied {
+            background-color: #ffd700 !important;
+            background-image: none !important; /* Xóa triệt để hình ảnh con vịt bị lệch cũ */
+            box-shadow: 0 0 12px #ffd700 !important;
+            position: relative !important;
+            overflow: visible !important;
+        }
+        .seat.occupied::after {
+            content: '🐤'!important;
+            position: absolute !important ;
+            top: 50% !important;
+            left: 50% !important ;
+            transform: translateX(-50%,-50%)!important;
+            font-size: 28px !important;
+            line-height: 1 !important;
+            background: transparent !important;
+        }
+
+        .next-btn {
+            background: #facc15;
+            color: #000;
+            border: none;
+            padding: 12px 28px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 25px;
+            margin-top: 25px !important;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(250, 204, 21, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .next-btn:hover {
+            transform: scale(1.05);
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@700&family=Mochiy+Pop+One&display=swap');
+        
+
+        .welcome-title-3d {
+            font-family: 'Fredoka', 'Mochiy Pop One', sans-serif;
+            font-size: 3.2rem;
+            font-weight: 900;
+            color: #ffeb3b !important;
+            -webkit-text-fill-color: #ffea00 !important;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+  
+        /* Tạo hiệu ứng chữ 3D bằng text-shadow */
+            text-shadow: 
+                0 1px 0 #d99b00,
+                0 2px 0 #c48c00,
+                0 3px 0 #af7c00,
+                0 4px 0 #9a6d00,
+                0 5px 0 #855e00,
+                0 6px 0 #6e4e00,
+                0 7px 0 #4a3400,
+                0 8px 10px rgba(0, 0, 0, 0.5) !important;
+
+        /* Hiệu ứng nhún nhảy nhẹ cho sinh động */
+            animation: bounce3D 2.5s infinite ease-in-out;
+        }
+
+        @keyframes bounce3D {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-8px) scale(1.03); }
+        }
+        /* Sơ đồ ghế */
+        .seat-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            background-color: #1f0d0d;
+            padding: 20px;
+            border-radius: 16px;
+            width: 100%;
+        }
+
+        .seat {
+            aspect-ratio: 1;
+            background-color: #800000;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .seat.gina {
+            background-color: #ffd700;
+            box-shadow: 0 0 12px #ffd700;
+        }
+
+        .chick-icon {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%,-50%);
+            font-size: 20px;
+        }
+
+    /* Chú thích hàng ghế */
+        .seat-legend {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 28px;
+            color: #d1d5db;
+            font-size: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-box {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .legend-text {
+            color: #ffffff;;         /* 🔴 Ép màu đen dứt điểm cho chữ */
+            font-weight: 600;       /* Chỉnh chữ đậm hơn chút cho rõ, bà có thể xóa dòng này nếu thích */
+            margin-left: 5px;       /* Cách cái ô màu ra chút cho đẹp */
+            font-size: 14px;        /* Chỉnh kích thước chữ, tùy bà thích to hay nhỏ */
+            display: inline-block;  /* Đảm bảo chữ nằm trên cùng 1 dòng với ô màu */
+            vertical-align: middle; /* Căn giữa chữ với ô màu theo chiều dọc */
+        }
+
+        .empty-seat {
+            background-color: #800000;
+        }
+
+        .occupied-seat {
+            background-color: #ffd700;
+            box-shadow: 0 0 8px #ffd700;
+        }
+
+        /* ================= SCREEN 3: LỊCH THÁNG 8/2026 (DECOR MEME VỊT) ================= */
+        #screen3 {
+            background-color: #fff176;
+            background-image: 
+                linear-gradient(90deg, rgba(255, 238, 88, 0.6) 50%, transparent 50%),
+                linear-gradient(rgba(255, 238, 88, 0.6) 50%, transparent 50%);
+            background-size: 30px 30px;
+            font-family: 'Architects Daughter', cursive;
+            min-height: 100vh;
+            width: 100%;
+            position: relative; /* Quan trọng để giữ sticker ở màn 3 */
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            overflow-x: visible !important;
+        }
+
+    /* CONTAINER CHÍNH */
+    .desk-container {
+      position: relative !important;
+      margin: 40px auto !important;
+      max-width: 90%;
+      width: 100%;
+      max-width: 720px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: visible !important;
+    }
+
+    /* TRANG SỔ LỊCH TRUNG TÂM */
+    .journal-page {
+      background-color: #fffdf0;
+      border: 3.5px solid #4a321a;
+      border-radius: 12px;
+      width: 100%;
+      padding: 35px 28px 45px 28px;
+      position: relative;
+      box-shadow: 10px 15px 30px rgba(180, 130, 0, 0.25);
+    }
+
+    /* BĂNG KEO DÁN TRANG TRÍ (Washi Tape) */
+    .washi-tape-top {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-1deg);
+      width: 140px;
+      height: 30px;
+      background: rgba(255, 213, 79, 0.85);
+      border: 2px dashed #f57f17;
+      z-index: 10;
+    }
+
+    /* ART HEADER: Bé vịt đội hoa & mây nắng */
+    .header-art {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+      padding: 0 10px;
+    }
+
+    .duck-header {
+      font-size: 55px;
+      line-height: 1;
+      filter: drop-shadow(2px 3px 0px #ffe082);
+    }
+
+    .cloud-header {
+      font-size: 42px;
+    }
+
+    /* TIÊU ĐỀ AUG 2026 */
+    .month-title {
+      text-align: center;
+      font-family: 'Gochi Hand', cursive;
+      font-size: 60px;
+      letter-spacing: 3px;
+      color: #3e2723;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+
+    .year-subtitle {
+      text-align: center;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 18px;
+      color: #f57c00;
+      font-weight: bold;
+      margin-bottom: 25px;
+    }
+
+    /* BẢNG LỊCH GRID */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      row-gap: 20px;
+      column-gap: 6px;
+    }
+
+    /* THỨ TRONG TUẦN */
+    .day-name {
+      text-align: center;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 18px;
+      color: #e65100;
+      font-weight: 700;
+      padding-bottom: 8px;
+      border-bottom: 2px dashed #ffe082;
+    }
+
+    /* Ô NGÀY LỊCH */
+    .day-cell {
+      min-height: 70px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      position: relative;
+      font-size: 22px;
+      font-weight: bold;
+      color: #3e2723;
+    }
+
+    .sub-note {
+      font-size: 12px;
+      font-family: 'Patrick Hand', cursive;
+      color: #5d4037;
+      text-align: center;
+      line-height: 1.1;
+      margin-top: 2px;
+      white-space: nowrap;
+    }
+
+    /* ======================================================
+       HIỆU ỨNG TRÁI TIM 3D ĐẶC BIỆT DÀNH CHO NGÀY 6
+       ====================================================== */
+    .day-6-special {
+      position: relative;
+      z-index: 10;
+    }
+
+    .heart-3d-box {
+      position: relative;
+      width: 55px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: -5px;
+      cursor: pointer;
+      animation: heartbeat3D 2s infinite ease-in-out;
+    }
+
+    /* Tạo hình trái tim 3D bằng Pseudo-elements */
+    .heart-3d-box::before,
+    .heart-3d-box::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 28px;
+      height: 45px;
+      border-radius: 28px 28px 0 0;
+      background: linear-gradient(145deg, #ff5252, #ff1744);
+      /* Đổ bóng khối 3D + Đổ bóng đổ mặt giấy */
+      box-shadow: 
+        inset 2px 2px 4px rgba(255, 255, 255, 0.6),
+        inset -2px -3px 5px rgba(139, 0, 0, 0.5),
+        3px 6px 12px rgba(213, 0, 0, 0.4);
+      z-index: 1;
+    }
+
+    .heart-3d-box::before {
+      left: 27px;
+      transform: rotate(-45deg);
+      transform-origin: 0 100%;
+    }
+
+    .heart-3d-box::after {
+      left: 0;
+      transform: rotate(45deg);
+      transform-origin: 100% 100%;
+    }
+
+    /* Số 6 hiển thị đè lên chính giữa trái tim 3D */
+    .heart-3d-number {
+      position: relative;
+      z-index: 5;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 24px;
+      font-weight: 900;
+      color: #ffffff;
+      text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* Hiệu ứng nhịp đập 3D phập phồng sinh động */
+    @keyframes heartbeat3D {
+      0%, 100% {
+        transform: scale(1) rotate(-3deg);
+      }
+      50% {
+        transform: scale(1.15) rotate(3deg);
+      }
+    }
+
+    /* DECORATION TRANG TRÍ BÊN NGOÀI KHUNG LỊCH */
+    .paper-left,
+    .sticker-left-bg {
+         position: fixed !important;
+         left: -80px !important; /* Kéo lùi vào chút để ló tờ giấy xinh ra */
+         top: 50%;
+         transform: translateY(-50%);
+         z-index: 2;
+    }
+
+    .paper-right,
+    .sticker-right-bg {
+        position: fixed !important;
+        right: -80px !important;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 2;
+    }
+
+    .duck-big-left {
+        position: fixed !important;
+        left: -20px;         /* Cho ló ra 1 nửa ở góc trái như cũ */
+        bottom: 0px;
+        z-index: 10;
+        pointer-events: none;
+    }
+
+    .note-top-left {
+      position: absolute !important;
+      top: -20px !important;
+      left: -50px !important;
+      z-index: 10;
+      background: #fffde7;
+      border: 3px solid #ffd54f;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-family: 'Patrick Hand', cursive;
+      font-size: 19px;
+      color: #5d4037;
+      text-align: center;
+      transform: rotate(-10deg);
+    }
+    .note-top-left::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: 35%;
+      width: 30px;
+      height: 12px;
+      background: rgba(255, 179, 0, 0.6);
+    }
+
+    .polaroid-right {
+      position: absolute !important;
+      top: -15px !important;
+      right: -50px !important;
+      z-index: 10;
+      background: #fff;
+      padding: 8px 8px 18px 8px;
+      border: 2px solid #ffe082;
+      border-radius: 6px;
+      transform: rotate(12deg);
+      text-align: center;
+      font-size: 45px;
+    }
+
+    .cup-duck-right {
+      position: absolute !important;
+      bottom: -10px !important;
+      right: -40px !important;
+      z-index: 10;
+      font-size: 85px;
+      transform: rotate(5deg);
+    }
+
+    .flower-decor-1 { top: 40%; left: -50px; font-size: 30px; }
+    .flower-decor-2 { bottom: 30%; right: -50px; font-size: 32px; }
+
+    .page-number {
+      position: absolute;
+      bottom: 12px;
+      left: 20px;
+      font-size: 14px;
+      color: #8d6e63;
+      font-family: 'Patrick Hand', cursive;
+    }
+    /* =================================================== */
+/* 🔴 ÉP NGUYÊN TẮC ẨN MÀN HÌNH LÊN TRÊN CÙNG QUYỀN ƯU TIÊN */
+/* =================================================== */
+
+/* 1. Ẩn tất cả các màn hình không có class active */
+    div.screen {
+        display: none !important;
+    }
+
+/* 2. Khi màn hình nào được dán class active thì MỚI HIỆN */
+    div.screen.active {
+        display: flex !important;
+    }
+    
+    /* ========================MÀN 4=========================== */
+    /* Style cho Màn 4 - Bức thư */
+    .letter-card {
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 20px;
+        max-width: 90%;
+        width: 450px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        text-align: center;
+        border: 2px dashed #f43f5e;
+    }
+
+    .letter-header {
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: #e11d48;
+        margin-bottom: 15px;
+    }
+
+    .letter-body p {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #4b5563;
+        margin-bottom: 12px;
+        text-align: justify;
+    }
+
+    .letter-footer {
+        font-weight: bold;
+        color: #be123c !important;
+        text-align: center !important;
+        margin-top: 15px;
+    }
+
+    /* Màn 5 chuẩn ngân hà */
+    .screen5 {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        background-color: #000; /* Nền đen huyền bí */
+        overflow: hidden;
+    }
+
+    .heartCanvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+    .white-card {
+        background: rgba(255, 255, 255, 0.92);
+        color: #111111;
+        font-family: 'Courier New', Georgia, serif;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    </style>
+</head>
+<body>
+
+    <!-- ===== BỘ PHÁT NHẠC NỀN & NÚT ĐIỀU KHIỂN NHẠC ===== -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="Gina.mp3" type="audio/mpeg">
+    </audio>
+
+    <button class="music-control-btn" id="musicControlBtn" title="Bật/Tắt Nhạc">🎵</button>
+
+    <!-- ================= SCREEN 1: MẬT KHẨU ================= -->
+    <div id="screen1" class="screen active">
+        <div class="phone-card">
+            <label class="avatar-upload">
+                <img id="avatarPreview" class="avatar-preview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='%23ca8a04'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>" alt="Avatar">
+                <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+            </label>
+            <div class="avatar-hint">Bấm vào đây để chọn hình ảnh 📸</div>
+
+            <div class="passcode-title">Nhập mật khẩu để mở khóa🪄</div>
+
+            <div class="passcode-display">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+
+            <div class="keypad">
+                <button class="key-btn" onclick="pressKey('1')">1</button>
+                <button class="key-btn" onclick="pressKey('2')">2</button>
+                <button class="key-btn" onclick="pressKey('3')">3</button>
+                <button class="key-btn" onclick="pressKey('4')">4</button>
+                <button class="key-btn" onclick="pressKey('5')">5</button>
+                <button class="key-btn" onclick="pressKey('6')">6</button>
+                <button class="key-btn" onclick="pressKey('7')">7</button>
+                <button class="key-btn" onclick="pressKey('8')">8</button>
+                <button class="key-btn" onclick="pressKey('9')">9</button>
+                <button class="key-btn action" onclick="clearPass()">Clear</button>
+                <button class="key-btn" onclick="pressKey('0')">0</button>
+                <button class="key-btn action" onclick="deleteKey()">⌫</button>
+            </div>
+
+            <div id="errorMsg" class="error-msg"></div>
+        </div>
+    </div>
+
+    <!-- ================= SCREEN 2: RẠP PHIM ================= -->
+    <div id="screen2" class="screen">
+        <div class="cinema-screen-wrapper">
+            <div class="cinema-screen">
+                <h1 class="welcome-title-3d">💖 ~ Welcome, GINA ~ 💖</h1>
+                <video autoplay loop muted playsinline class="cinema-video">
+                    <source src="GNvideo.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+
+        <div class="cinema-seats">
+            <div class="seat-row">
+                <div class="seat"></div>
+                <div class="seat"></div>
+                <div class="seat"></div>
+                <div class="seat"></div>
+                <div class="seat"></div>
+                <div class="seat"></div>
+            </div>
+            <div class="seat-row">
+                <div class="seat"></div>
+                <div class="seat"></div>
+                <!-- Vị trí người ngồi -->
+                <div class="seat occupied"></div>
+                <div class="seat"></div>
+                <div class="seat"></div>
+                <div class="seat"></div>
+            </div>
+            <div class="seat-row">
+                <div class="seat"></div>
+                <div class="seat"></div>
+                <div class="seat"></div>
+                <div class="seat"></div>
+                <div class="seat"></div>
+                <div class="seat"></div>
+            </div>
+            <div class="seat-row">
+                <div class="seat"></div>
+                <div class="seat"></div>
+                <div class="seat"></div>
+                <div class="seat"></div>
+                <div class="seat"></div>
+                <div class="seat"></div>
+            </div>
+            <div class="seat-legend">
+                <div class="legend-item">
+                    <span class="legend-box empty-seat"></span>
+                    <span class="legend-text">Ghế trống</span>
+            </div>
+            <div class="legend-item">
+                    <span class="legend-box occupied-seat"></span>
+                    <span class="legend-text">🐤 GINA đang ngồi</span>
+            </div>
+        </div>
+
+            <!-- Nút đổi tên thành "Bí mật tiếp theo" -->
+            <button class="next-btn" onclick="goToScreen(3)">Hãy lật sang trang tiếp theo🌼 ➔</button>
+        </div>
+    </div>
+
+    <!-- ================= SCREEN 3: LỊCH THÁNG 8/2026 ================= -->
+    <div id="screen3" class="screen hidden-screen">
+        <div class="calendar-card">
+            <!-- Icon/Meme trang trí -->
+            <!-- BĂNG KEO DÁN -->
+        <div class="washi-tape-top"></div>
+
+    <!-- STICKER TRANG TRÍ BÊN NGOÀI KHUNG LỊCH -->
+        <div class="sticker note-top-left">
+        🐥<br>
+      Lovely Day<br>With Duckies! ✨
+        </div>
+
+        <div class="sticker duck-big-left">
+      🐥
+        </div>
+
+        <div class="sticker polaroid-right">
+      🐤
+         <div style="font-size:12px; font-family:'Patrick Hand'; color:#5d4037; margin-top:2px;">Quack!</div>
+        </div>
+
+        <div class="sticker cup-duck-right">
+         🍹
+        </div>
+
+        <div class="sticker flower-decor-1">🌼</div>
+        <div class="sticker flower-decor-2">🌻</div>
+
+
+    <!-- TRANG SỔ LỊCH TRUNG TÂM -->
+        <div class="journal-page">
+      
+      <!-- Header Trang Sổ -->
+        <div class="header-art">
+            <div class="duck-header">🐣</div>
+            <div class="cloud-header">✨☀️✨</div>
+        </div>
+
+      <!-- Tiêu đề -->
+        <div class="month-title">AUGUST</div>
+        <div class="year-subtitle">💛 2026 💛</div>
+
+      <!-- Khung Lịch -->
+        <div class="calendar-grid">
+        <!-- Thứ trong tuần -->
+            <div class="day-name">SUN</div>
+            <div class="day-name">MON</div>
+            <div class="day-name">TUE</div>
+            <div class="day-name">WED</div>
+            <div class="day-name">THU</div>
+            <div class="day-name">FRI</div>
+            <div class="day-name">SAT</div>
+
+        <!-- Tuần 1 -->
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell">1</div>
+
+        <!-- Tuần 2 -->
+            <div class="day-cell">
+             2 ☀️
+                <span class="sub-note"><b>GOOD</b></span>
+            </div>
+            <div class="day-cell">
+             3 🏡
+            <span class="sub-note">House</span>
+            </div>
+            <div class="day-cell">4</div>
+            <div class="day-cell">5</div> <!-- Ngày 5 trơn (đã bỏ icon) -->
+
+        <!-- ===== NGÀY 06 TRÁI TIM 3D NỔI BẬT KHỐI ===== -->
+            <div class="day-cell day-6-special">
+             <div class="heart-3d-box">
+                <span class="heart-3d-number">6</span>
+            </div>
+            </div>
+
+            <div class="day-cell">
+             7 🌺
+                <span class="sub-note">Exhibit</span>
+            </div>
+            <div class="day-cell">8</div>
+
+        <!-- Tuần 3 -->
+            <div class="day-cell">
+             9 💧
+                <span class="sub-note">Lonely</span>
+            </div>
+            <div class="day-cell">
+             10 😠
+                <span class="sub-note">Clinic</span>
+            </div>
+            <div class="day-cell">
+             11 🧹
+                <span class="sub-note">Cleaning!</span>
+            </div>
+            <div class="day-cell">
+             12 🍿
+                <span class="sub-note">Movie</span>
+            </div>
+            <div class="day-cell">13</div>
+            <div class="day-cell">
+             14 💕
+                <span class="sub-note">αℓι¢є</span>
+            </div>
+            <div class="day-cell">15 🍄</div>
+
+        <!-- Tuần 4 -->
+            <div class="day-cell">16</div>
+            <div class="day-cell">17</div> <!-- Ngày 17 trơn (đã bỏ khung DATE) -->
+            <div class="day-cell">
+             18 ☂️
+                <span class="sub-note">Gloomy</span>
+            </div>
+            <div class="day-cell">19</div>
+            <div class="day-cell">20</div>
+            <div class="day-cell">
+             21 🎂 <!-- Ngày 21 (đã bỏ chữ Birthday) -->
+            </div>
+            <div class="day-cell">22</div>
+
+        <!-- Tuần 5 -->
+            <div class="day-cell">
+             23 🎉
+                <span class="sub-note">Exciting!</span>
+            </div>
+            <div class="day-cell">24</div>
+            <div class="day-cell">
+             25 🚗
+                <span class="sub-note">Trip</span>
+            </div>
+            <div class="day-cell">26</div>
+            <div class="day-cell">
+             27 🍳
+                <span class="sub-note">Cooking</span>
+            </div>
+            <div class="day-cell">
+             28
+                <span class="sub-note">Me Time</span>
+            </div>
+            <div class="day-cell">29</div>
+
+        <!-- Tuần 6 -->
+            <div class="day-cell">
+             30 👠
+                <span class="sub-note">Shopping</span>
+            </div>
+            <div class="day-cell">
+             31 🛒
+                <span class="sub-note">Grocery</span>
+            </div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+
+            <div class="page-number">088 • August Journal</div>
+                </div>
+            </div>
+                <button class="next-btn" onclick="goToScreen(4)">
+                            Cứ từ từ xem thôi🦆 ➔
+                </button>
+        </div>
+    </div>
+
+    <!-- MÀN 4: THƯ TÌNH (Bức thư gửi em) -->
+    <div id="screen4" class="screen hidden-screen">
+        <div class="letter-card">
+            <div class="letter-header">💌 Gửi chị GINA HELL</div>
+            <div class="letter-body">
+                <p>Hôm nay là một ngày thật đặc biệt. Cảm ơn GINA💖 đã đến cuộc đời này, cùng em trải qua những khoảnh khắc bình dị nhưng tràn ngập nhiều điều vui vẻ .</p>
+                <p>Mong rằng dù nhiều năm sau nữa, chúng mình vẫn sẽ tiếp tục đi cùng nhau, cùng tạo thêm thật nhiều kỷ niệm !</p>
+                <p class="letter-footer">Chúc mừng sinh nhật của Gina ❤️</p>
+            </div>
+            <button class="next-btn" onclick="goToScreen(5)">Suỵt... còn một bí mật nữa đó 🌌</button>
+        </div>
+    </div>
+
+<!-- MÀN 5: BỨC ẢNH KỈ NIỆM & THÔNG ĐIỆP -->
+    <div id="screen5" class="screen hidden-screen">
+        <canvas id="heartCanvas"></canvas>
+    </div>
+
+    <!-- ================= JAVASCRIPT ================= -->
+    <script>
+        // Mật khẩu chính xác: 0608
+        const CORRECT_PIN = "0608";
+        let enteredPin = "";
+
+        const audio = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicControlBtn');
+
+        // Logic điều khiển nhạc thủ công
+        if (musicBtn && audio) {
+            musicBtn.addEventListener('click', function() {
+                if (audio.paused) {
+                    audio.play();
+                    musicBtn.classList.add('music-rotate');
+                    musicBtn.textContent = '🎵';
+                } else {
+                    audio.pause();
+                    musicBtn.classList.remove('music-rotate');
+                    musicBtn.textContent = '🔇';
+                }
+            });
+        }
+
+        // Tải ảnh avatar cá nhân
+        document.getElementById('avatarInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    document.getElementById('avatarPreview').src = evt.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Bấm phím số
+        function pressKey(num) {
+            if (enteredPin.length < 4) {
+                enteredPin += num;
+                updateDots();
+                document.getElementById('errorMsg').innerText = "";
+
+                if (enteredPin.length === 4) {
+                    setTimeout(checkPin, 200);
+                }
+            }
+        }
+
+        // Xóa 1 số
+        function deleteKey() {
+            if (enteredPin.length > 0) {
+                enteredPin = enteredPin.slice(0, -1);
+                updateDots();
+            }
+        }
+
+        // Xóa hết
+        function clearPass() {
+            enteredPin = "";
+            updateDots();
+            document.getElementById('errorMsg').innerText = "";
+        }
+
+        // Cập nhật chấm tròn mật khẩu
+        function updateDots() {
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, idx) => {
+                if (idx < enteredPin.length) {
+                    dot.classList.add('filled');
+                } else {
+                    dot.classList.remove('filled');
+                }
+            });
+        }
+
+        // Kiểm tra mật khẩu (0608)
+        function checkPin() {
+            if (enteredPin === CORRECT_PIN) {
+                // Tự động phát nhạc ngay khi đăng nhập thành công
+                if (audio) {
+                    audio.play().then(() => {
+                        if (musicBtn) musicBtn.classList.add('music-rotate');
+                    }).catch(err => {
+                        console.log("Cần tương tác người dùng để phát nhạc:", err);
+                    });
+                }
+                goToScreen(2);
+            } else {
+                document.getElementById('errorMsg').innerText = "Mật khẩu chưa đúng!";
+                enteredPin = "";
+                updateDots();
+            }
+        }
+
+        // ========== CHUYỂN MÀN ==========
+        function goToScreen(screenNumber) {
+  // 1. Ẩn tất cả các màn hình
+            const allScreens = document.querySelectorAll('.screen');
+            allScreens.forEach(screen => {
+                screen.classList.remove('active');
+                screen.classList.add('hidden-screen');
+                screen.style.display = 'none';
+            });
+
+  // 2. Hiện màn hình được chọn
+            const targetScreen = document.getElementById('screen' + screenNumber);
+            if (targetScreen) {
+                targetScreen.classList.remove('hidden-screen');
+                targetScreen.classList.add('active');
+                targetScreen.style.display = 'flex';
+
+                window.scrollTo({ top: 0, behavior: 'instant' });
+
+                if (screenNumber === 3) {
+                    if (typeof generateCalendar === 'function') {
+                        generateCalendar();
+                    }
+                }
+                // Kích hoạt logic riêng cho Màn 5 (Trái tim & Đĩa chữ xoay)
+                if (screenNumber === 5) {
+                    if (typeof initHeartCanvas === 'function') {
+                        initHeartCanvas();
+                    }
+                }
+            } else {
+                console.error("Không tìm thấy màn hình với ID: screen" + screenNumber);
+            }
+        }
+
+
+// ========== GÁN SỰ KIỆN CHO NÚT ==========
+        document.addEventListener('DOMContentLoaded', function() {
+    // Nút "Hãy lật sang trang tiếp theo" -> chuyển sang màn 3
+            const nextBtn = document.querySelector('.next-btn');
+            if (nextBtn) {
+                nextBtn.addEventListener('click', function() {
+                    goToScreen(3);
+            });
+        }
+    });
+        let isCanvasInited = false;
+
+function initHeartCanvas() {
+  if (isCanvasInited) return;
+  isCanvasInited = true;
+
+  const canvas = document.getElementById('heartCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  let width = (canvas.width = window.innerWidth);
+  let height = (canvas.height = window.innerHeight);
+
+  window.addEventListener('resize', () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  });
+
+  // 1. NỀN NGÂN HÀ HẠT VÀNG
+  const stars = [];
+  for (let i = 0; i < 300; i++) {
+    stars.push({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      size: Math.random() * 1.2,
+      alpha: Math.random(),
+      speed: Math.random() * 0.01 + 0.003
+    });
+  }
+
+  // 2. PLANET 3D RỘNG - HẠT SIÊU NHỎ & NHIỀU (2500 HẠT)
+  const sphereParticles = [];
+  const sphereCount = 2500; 
+  const planetRadius = 130; // Mở rộng kích thước Planet 3D
+
+  for (let i = 0; i < sphereCount; i++) {
+    const u = Math.random();
+    const v = Math.random();
+    const theta = u * 2.0 * Math.PI;
+    const phi = Math.acos(2.0 * v - 1.0);
+
+    sphereParticles.push({
+      x0: planetRadius * Math.sin(phi) * Math.cos(theta),
+      y0: planetRadius * Math.sin(phi) * Math.sin(theta),
+      z0: planetRadius * Math.cos(phi),
+      size: Math.random() * 0.9 + 0.3 // Hạt cực nhỏ
+    });
+  }
+
+  // 3. VÀNH ĐAI HẠT XOAY QUANH PLANET (1500 HẠT)
+  const ringParticles = [];
+  const ringCount = 1500;
+  for (let i = 0; i < ringCount; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const distance = planetRadius * 1.2 + Math.random() * 110;
+    ringParticles.push({
+      angle: angle,
+      distance: distance,
+      speed: Math.random() * 0.006 + 0.002,
+      size: Math.random() * 0.8 + 0.3
+    });
+  }
+
+  // 4. MATRIX RAIN: HẠT VÀNG RƠI TỪ PLANET XUỐNG DƯỚI CHỮ
+  const matrixRain = [];
+  const maxRain = 180;
+
+  // 5. DANH SÁCH CHỮ XOAY PHÍA DƯỚI
+  const textList = [
+    "Chúc chị tuổi mới luôn bình an và hạnh phúc. 🤍", "Mãi xinh đẹp và rạng rỡ như hôm nay🌌", "Tuổi mới thật nhiều sức khỏe, niềm vui và thành công.",
+    "Luôn cười thật nhiều và sống thật hạnh phúc🐰", "Mong mọi điều tốt đẹp sẽ luôn đồng hành cùng chị",
+    "Mỗi ngày đều là một ngày đáng nhớღ", "Luôn gặp nhiều may mắn trên mọi hành trình💖","Mãi là phiên bản tuyệt vời nhất của chính mình","Chúc chị luôn được yêu thương và trân trọng",
+    "Chúc Gina có thật nhiều khoảnh khắc hạnh phúc","Thêm tuổi mới không thêm muộn phiền",
+    "🫧Happy Birthday🍩", "GINA HELL 🐤","☁︎ 06 · August · 1993 ☁︎ ", "💕 I 💖 L O V E 💖 Y O U 💕","(づ｡◕‿‿◕｡)づ"
+]
+
+  let angleY = 0;
+  let ringRotation = 0;
+
+  function render() {
+    // Nền tối phong cách Matrix
+    ctx.fillStyle = 'rgba(5, 5, 10, 0.28)';
+    ctx.fillRect(0, 0, width, height);
+
+    // --- A. SAO NỀN ---
+    ctx.fillStyle = '#ffd700';
+    for (let s of stars) {
+      s.alpha += s.speed;
+      if (s.alpha > 1 || s.alpha < 0) s.speed = -s.speed;
+      ctx.globalAlpha = Math.abs(s.alpha) * 0.6;
+      ctx.fillRect(s.x, s.y, s.size, s.size);
+    }
+    ctx.globalAlpha = 1;
+
+    const centerX = width / 2;
+    const centerY = height / 2 - 60; // Tọa độ tâm Planet
+    const diskY = height / 2 + 160;  // Vị trí đĩa chữ
+
+    angleY += 0.004;
+    ringRotation += 0.005;
+
+    const cosY = Math.cos(angleY);
+    const sinY = Math.sin(angleY);
+
+    // --- B. VÀNH ĐAI PHÍA SAU PLANET ---
+    for (let p of ringParticles) {
+      p.angle += p.speed;
+      const rx = Math.cos(p.angle) * p.distance;
+      const rz = Math.sin(p.angle) * p.distance;
+      
+      const x3d = rx;
+      const y3d = rz * 0.25; 
+      const z3d = rz * 0.9;
+
+      if (z3d < 0) {
+        const scale = (z3d + 300) / 300;
+        ctx.fillStyle = `rgba(255, 215, 0, ${Math.max(0.1, scale * 0.5)})`;
+        ctx.beginPath();
+        ctx.arc(centerX + x3d, centerY + y3d, p.size * scale, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // --- C. HÀNH TINH PLANET 3D VÀNG MATRIX ---
+    sphereParticles.forEach(p => {
+      const x1 = p.x0 * cosY + p.z0 * sinY;
+      const z1 = -p.x0 * sinY + p.z0 * cosY;
+      const y1 = p.y0;
+
+      const scale = (z1 + planetRadius * 2) / (planetRadius * 2);
+      const alpha = Math.max(0.15, (z1 + planetRadius) / (planetRadius * 2));
+
+      // Tông màu Vàng Gold / Matrix Neon
+      ctx.fillStyle = `rgba(255, ${Math.floor(200 + alpha * 55)}, 0, ${alpha})`;
+      ctx.beginPath();
+      ctx.arc(centerX + x1, centerY + y1, p.size * Math.max(0.4, scale), 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // --- D. VÀNH ĐAI PHÍA TRƯỚC PLANET ---
+    for (let p of ringParticles) {
+      const rx = Math.cos(p.angle) * p.distance;
+      const rz = Math.sin(p.angle) * p.distance;
+      
+      const x3d = rx;
+      const y3d = rz * 0.25;
+      const z3d = rz * 0.9;
+
+      if (z3d >= 0) {
+        const scale = (z3d + 300) / 300;
+        ctx.fillStyle = `rgba(255, 225, 80, ${Math.min(0.9, scale)})`;
+        ctx.beginPath();
+        ctx.arc(centerX + x3d, centerY + y3d, p.size * scale, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // --- E. TẠO HỆ THỐNG MATRIX RAIN (HẠT VÀNG RƠI TỪ PLANET XUỐNG CHỮ) ---
+    if (matrixRain.length < maxRain && Math.random() < 0.6) {
+      matrixRain.push({
+        x: centerX + (Math.random() - 0.5) * (planetRadius * 2.2),
+        y: centerY + (Math.random() - 0.3) * planetRadius,
+        speed: Math.random() * 2.5 + 1.2,
+        length: Math.random() * 12 + 4,
+        size: Math.random() * 1.1 + 0.4,
+        alpha: Math.random() * 0.7 + 0.3
+      });
+    }
+
+    // Vẽ mưa hạt Matrix
+    for (let i = matrixRain.length - 1; i >= 0; i--) {
+      let r = matrixRain[i];
+      r.y += r.speed;
+
+      // Vệt sáng dạng Matrix rơi xuống
+      const grad = ctx.createLinearGradient(r.x, r.y - r.length, r.x, r.y);
+      grad.addColorStop(0, 'rgba(255, 215, 0, 0)');
+      grad.addColorStop(1, `rgba(255, 235, 120, ${r.alpha})`);
+
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = r.size;
+      ctx.beginPath();
+      ctx.moveTo(r.x, r.y - r.length);
+      ctx.lineTo(r.x, r.y);
+      ctx.stroke();
+
+      // Xóa hạt khi rớt quá đĩa chữ
+      if (r.y > diskY + 40) {
+        matrixRain.splice(i, 1);
+      }
+    }
+
+    // --- F. ĐĨA CHỮ XOAY PHÍA DƯỚI ---
+    const radiusX = 220;
+    const radiusY = 45;
+
+    textList.forEach((text, i) => {
+      const currentAngle = ringRotation + (i * (Math.PI * 2 / textList.length));
+      const x = centerX + Math.cos(currentAngle) * radiusX;
+      const y = diskY + Math.sin(currentAngle) * radiusY;
+
+      const scale = (Math.sin(currentAngle) + 2) / 3;
+      const opacity = (Math.sin(currentAngle) + 1) / 2 + 0.3;
+
+      ctx.save();
+      ctx.font = `bold ${14 * scale}px 'Courier New', monospace`;
+      ctx.fillStyle = `rgba(255, 230, 100, ${opacity})`;
+      ctx.shadowColor = '#ffaa00';
+      ctx.shadowBlur = 12;
+      ctx.textAlign = 'center';
+      ctx.fillText(text, x, y);
+      ctx.restore();
+    });
+
+    requestAnimationFrame(render);
+  }
+
+  render();
+}
+        
+    </script>
+</body>
+</html>
