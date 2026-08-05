@@ -1,1 +1,1015 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Gina - Duck & Cake World</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --pastel-blue-dark: #6ba4b8;
+            --pastel-blue: #a2d2ff;
+            --pastel-blue-light: #bde0fe;
+            --pastel-blue-bg: #e8f4f8;
+            --pastel-pink: #ffc8dd;
+            --pastel-yellow: #fcf6bd;
+            --text-dark: #2b4c59;
+            --cake-brown: #8d5b4c;
+            --cake-cream: #fff3e0;
+            --icing-white: #ffffff;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--pastel-blue-bg);
+            color: var(--text-dark);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Consolas', 'Quicksand', monospace, sans-serif;
+        }
+
+        /* --- NÚT CHỈNH NHẠC NỔI GÓC TRÊN --- */
+        .music-control-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 3px solid var(--pastel-blue-dark);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--pastel-blue-dark);
+            font-size: 1.3rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(107, 164, 184, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .music-control-btn:hover {
+            transform: scale(1.1);
+            background: #ffffff;
+        }
+
+        .music-control-btn.playing {
+            animation: spinMusicIcon 4s linear infinite;
+            color: #ff7597;
+            border-color: var(--pastel-pink);
+        }
+
+        @keyframes spinMusicIcon {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- CẤU TRÚC TRANG --- */
+        .page {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease;
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(180deg, #d0e6f8 0%, #edf6fd 100%);
+            overflow: hidden;
+        }
+
+        .page.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+
+        /* --- MÂY PIXEL TRANG TRÍ --- */
+        .pixel-cloud {
+            position: absolute;
+            background: #ffffff;
+            box-shadow: 
+                0 -8px 0 0 #ffffff,
+                0 8px 0 0 #ffffff,
+                -8px 0 0 0 #ffffff,
+                8px 0 0 0 #ffffff;
+            border-radius: 4px;
+            opacity: 0.85;
+            pointer-events: none;
+        }
+
+        /* --- TRANG 1: IPHONE CALL --- */
+        #page1 {
+            background: linear-gradient(135deg, #74adb8 0%, #a2d2ff 100%);
+            color: #ffffff;
+            font-family: 'Press Start 2P', monospace;
+        }
+
+        .iphone-caller {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 50px;
+        }
+
+        .caller-avatar-img {
+            width: 120px;
+            height: 120px;
+            border: 4px solid #ffffff;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            animation: pulseAvatar 2s infinite;
+            margin-bottom: 25px;
+            background-color: var(--pastel-pink);
+        }
+
+        @keyframes pulseAvatar {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(255, 255, 255, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+        .caller-name {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+            color: #ffffff;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.15);
+        }
+
+        .caller-status {
+            font-size: 0.8rem;
+            color: #f0f8ff;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .slider-wrapper {
+            position: relative;
+            width: 310px;
+            height: 65px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border-radius: 40px;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.1), 0 8px 20px rgba(0,0,0,0.1);
+            border: 2px solid rgba(255,255,255,0.4);
+        }
+
+        .slider-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-size: 0.65rem;
+            color: #ffffff;
+            letter-spacing: 1px;
+            pointer-events: none;
+            padding-left: 45px;
+        }
+
+        .slider-btn {
+            width: 55px;
+            height: 55px;
+            background: #2ec4b6;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.3rem;
+            cursor: grab;
+            position: absolute;
+            left: 5px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: background 0.2s;
+        }
+
+        /* --- TRANG 2: COUNTDOWN --- */
+        #page2 {
+            font-family: 'Press Start 2P', monospace;
+        }
+
+        .pixel-title {
+            font-size: 1.2rem;
+            color: #3a6073;
+            margin-bottom: 35px;
+            line-height: 1.6;
+            text-shadow: 2px 2px 0px #ffffff;
+        }
+
+        .countdown-box {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .pixel-card {
+            background: #ffffff;
+            border: 4px solid var(--pastel-blue-dark);
+            box-shadow: 6px 6px 0px var(--pastel-blue-light);
+            padding: 18px 12px;
+            min-width: 95px;
+            border-radius: 8px;
+        }
+
+        .pixel-num {
+            font-size: 1.6rem;
+            color: #2b4c59;
+            margin-bottom: 8px;
+        }
+
+        .pixel-label {
+            font-size: 0.55rem;
+            color: #6ba4b8;
+        }
+
+        .btn-pixel {
+            background: var(--pastel-pink);
+            color: #4a2840;
+            border: 3px solid #ffffff;
+            outline: 3px solid var(--pastel-pink);
+            padding: 14px 28px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px #3a6073;
+            transition: all 0.1s;
+            margin-top: 15px;
+            border-radius: 4px;
+            font-family: 'Press Start 2P', monospace;
+        }
+
+        /* --- TRANG 3: BÁNH KEM CSS HOẠT HÌNH & ĐÀN VỊT --- */
+        #page3 {
+            font-family: 'Consolas', monospace;
+            position: relative;
+        }
+
+        .duck-stage {
+            position: relative;
+            width: 280px;
+            height: 220px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        /* Bánh kem CSS Animation */
+        .css-cake-container {
+            position: relative;
+            width: 200px;
+            height: 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            z-index: 3;
+            transform-origin: bottom center;
+            animation: cakeFloat 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes cakeFloat {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-8px); }
+        }
+
+        .cake-plate {
+            width: 220px;
+            height: 14px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            bottom: 0;
+            border: 2px solid var(--pastel-blue-light);
+        }
+
+        .cake-body {
+            position: relative;
+            width: 170px;
+            height: 90px;
+            background: linear-gradient(180deg, #a26953 0%, #734537 100%);
+            border-radius: 12px 12px 6px 6px;
+            box-shadow: inset 0 -10px 0 rgba(0, 0, 0, 0.15), 0 8px 12px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .cake-fill {
+            width: 100%;
+            height: 12px;
+            background: var(--pastel-pink);
+            margin-top: 38px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .icing-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 32px;
+            background: #ffffff;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .drips {
+            position: absolute;
+            top: 26px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .drip {
+            background: #ffffff;
+            width: 18px;
+            height: 18px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.05);
+        }
+
+        .drip:nth-child(1) { height: 16px; width: 22px; }
+        .drip:nth-child(2) { height: 26px; width: 16px; }
+        .drip:nth-child(3) { height: 12px; width: 20px; }
+        .drip:nth-child(4) { height: 28px; width: 18px; }
+        .drip:nth-child(5) { height: 18px; width: 22px; }
+        .drip:nth-child(6) { height: 22px; width: 16px; }
+
+        .candle-stem {
+            position: absolute;
+            top: -38px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 14px;
+            height: 40px;
+            background: repeating-linear-gradient(
+                45deg,
+                #ffb5a7,
+                #ffb5a7 6px,
+                #ffffff 6px,
+                #ffffff 12px
+            );
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 4;
+        }
+
+        .candle-flame {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 14px;
+            height: 22px;
+            background: radial-gradient(ellipse at bottom, #ffea00 0%, #ff6d00 60%, rgba(255,0,0,0) 100%);
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 0 15px #ffab00, 0 0 25px #ffea00;
+            animation: flameFlicker 0.6s infinite alternate;
+            transform-origin: center bottom;
+        }
+
+        @keyframes flameFlicker {
+            0% { transform: translateX(-50%) scale(1) rotate(-2deg); opacity: 0.95; }
+            50% { transform: translateX(-50%) scale(1.15) rotate(2deg); opacity: 1; }
+            100% { transform: translateX(-50%) scale(0.9) rotate(-1deg); opacity: 0.9; }
+        }
+
+        .duck-face-on-cake {
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 5;
+        }
+
+        .glasses {
+            width: 65px;
+            height: 18px;
+            background: #222222;
+            border-radius: 4px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .glasses::before, .glasses::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            width: 24px;
+            height: 12px;
+            background: #444;
+            border-radius: 2px;
+        }
+        .glasses::before { left: 4px; }
+        .glasses::after { right: 4px; }
+
+        .beak {
+            width: 28px;
+            height: 14px;
+            background: #ff9e00;
+            border-radius: 0 0 12px 12px;
+            margin-top: 2px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.2);
+        }
+
+        .animated-duck {
+            position: absolute;
+            font-size: 2.3rem;
+            z-index: 2;
+            pointer-events: none;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+        }
+
+        .duck-1 {
+            top: 10px;
+            left: -20px;
+            animation: duckOrbit1 3.8s ease-in-out infinite alternate;
+        }
+
+        .duck-2 {
+            bottom: 5px;
+            right: -20px;
+            animation: duckOrbit2 3.2s ease-in-out infinite alternate;
+        }
+
+        .duck-3 {
+            top: 35px;
+            right: -30px;
+            animation: duckWiggle 1.6s ease-in-out infinite alternate;
+        }
+
+        .duck-4 {
+            bottom: 25px;
+            left: -30px;
+            animation: duckWiggle 2.1s ease-in-out infinite alternate-reverse;
+        }
+
+        @keyframes duckOrbit1 {
+            0% { transform: translate(0, 0) rotate(-10deg) scale(1); }
+            100% { transform: translate(28px, 16px) rotate(15deg) scale(1.2); }
+        }
+
+        @keyframes duckOrbit2 {
+            0% { transform: translate(0, 0) rotate(10deg) scale(1.1); }
+            100% { transform: translate(-24px, -16px) rotate(-10deg) scale(0.9); }
+        }
+
+        @keyframes duckWiggle {
+            0% { transform: translateY(0) rotate(-15deg); }
+            100% { transform: translateY(-14px) rotate(15deg); }
+        }
+
+        .falling-text-container {
+            position: relative;
+            width: 90%;
+            max-width: 650px;
+            min-height: 85px;
+            background: rgba(255, 255, 255, 0.88);
+            border: 2px dashed var(--pastel-blue-dark);
+            border-radius: 12px;
+            padding: 12px;
+            margin: 10px 0;
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: center;
+            gap: 2px;
+            font-size: 1.05rem;
+            font-weight: bold;
+            color: #2b4c59;
+            line-height: 1.5;
+            z-index: 5;
+        }
+
+        .char-drop {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(-80px);
+            animation: dropAnim 0.3s forwards ease-out;
+        }
+
+        @keyframes dropAnim {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .battery-box {
+            width: 280px;
+            height: 32px;
+            border: 3px solid #3a6073;
+            background: #ffffff;
+            border-radius: 6px;
+            padding: 3px;
+            position: relative;
+            margin: 10px 0;
+            box-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+            z-index: 5;
+        }
+
+        .battery-level {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #bde0fe, #a2d2ff);
+            border-radius: 3px;
+        }
+
+        .battery-cap {
+            position: absolute;
+            right: -10px;
+            top: 6px;
+            width: 6px;
+            height: 14px;
+            background: #3a6073;
+            border-radius: 0 2px 2px 0;
+        }
+
+        .battery-percent {
+            position: absolute;
+            width: 100%;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            font-size: 0.75rem;
+            color: #2b4c59;
+            font-weight: bold;
+        }
+
+        .gift-3d {
+            display: none;
+            font-size: 3rem;
+            cursor: pointer;
+            margin-top: 5px;
+            animation: giftBounce 0.8s infinite alternate;
+            z-index: 5;
+        }
+
+        @keyframes giftBounce {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-12px) scale(1.1); }
+        }
+
+        /* --- TRANG 4: LỜI CHÚC & MÂY BUNG CHỮ --- */
+        #page4 {
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+
+        .wish-pixel-box {
+            background: rgba(255, 255, 255, 0.95);
+            border: 3px solid var(--pastel-blue-dark);
+            box-shadow: 0 10px 30px rgba(107, 164, 184, 0.25);
+            padding: 35px 30px;
+            max-width: 620px;
+            border-radius: 16px;
+            z-index: 5;
+            position: relative;
+            margin: 20px;
+        }
+
+        .wish-pixel-box h2 {
+            font-size: 1.5rem;
+            color: #3a6073;
+            margin-bottom: 20px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .wish-pixel-box p {
+            font-size: 1.1rem;
+            color: #2b4c59;
+            line-height: 1.8;
+            text-align: justify;
+            font-weight: 600;
+        }
+
+        .rising-clouds-wrapper {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .floating-cloud {
+            position: absolute;
+            background: #ffffff;
+            border-radius: 50px;
+            opacity: 0.9;
+            box-shadow: 0 6px 15px rgba(162, 210, 255, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #3a6073;
+            font-weight: bold;
+            font-size: 0.95rem;
+            font-family: 'Consolas', monospace;
+            animation: floatUp linear infinite;
+            padding: 10px 15px;
+            border: 2px solid #bde0fe;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(105vh) scale(0.7); opacity: 0; }
+            20% { opacity: 0.95; }
+            100% { transform: translateY(-20vh) scale(1.3); opacity: 0; }
+        }
+
+        .flower-particle {
+            position: absolute;
+            pointer-events: none;
+            font-size: 1.2rem;
+            animation: spinFloat 5s linear infinite;
+        }
+
+        @keyframes spinFloat {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-120px) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- THẺ AUDIO NHẠC NỀN -->
+    <audio id="bgMusic" loop src="Onlylove.mp3"></audio>
+
+    <!-- NÚT ĐIỀU CHỈNH NHẠC NỔI GÓC CÙNG CỦA MÀN HÌNH -->
+    <div class="music-control-btn" id="musicBtn" onclick="toggleMusic()" title="Bật / Tắt nhạc">
+        <i class="fa-solid fa-music-slash" id="musicIcon"></i>
+    </div>
+
+    <!-- MÂY TRANG TRÍ NỀN -->
+    <div class="pixel-cloud" style="top: 10%; left: 8%; width: 60px; height: 16px;"></div>
+    <div class="pixel-cloud" style="top: 15%; right: 12%; width: 80px; height: 20px;"></div>
+    <div class="pixel-cloud" style="bottom: 12%; left: 15%; width: 70px; height: 18px;"></div>
+
+    <!-- TRANG 1: IPHONE CALL -->
+    <div class="page active" id="page1">
+        <div class="iphone-caller">
+            <img src="GInanna.jpg" alt="Gina" class="caller-avatar-img">
+            <div class="caller-name">GINA 💖</div>
+            <div class="caller-status">Birthday is calling...</div>
+        </div>
+
+        <div class="slider-wrapper" id="sliderWrapper">
+            <div class="slider-text">TRƯỢT ĐỂ TRẢ LỜI ➔</div>
+            <div class="slider-btn" id="sliderBtn">
+                <i class="fa-solid fa-phone"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- TRANG 2: COUNTDOWN MANILA TIME (00:00 06/08/2026 UTC+8) -->
+    <div class="page" id="page2">
+        <h1 class="pixel-title">COUNTDOWN TO<br>GINA'S SPECIAL DAY 🎈</h1>
+        
+        <div class="countdown-box">
+            <div class="pixel-card">
+                <div class="pixel-num" id="days">00</div>
+                <div class="pixel-label">NGÀY</div>
+            </div>
+            <div class="pixel-card">
+                <div class="pixel-num" id="hours">00</div>
+                <div class="pixel-label">GIỜ</div>
+            </div>
+            <div class="pixel-card">
+                <div class="pixel-num" id="minutes">00</div>
+                <div class="pixel-label">PHÚT</div>
+            </div>
+            <div class="pixel-card">
+                <div class="pixel-num" id="seconds">00</div>
+                <div class="pixel-label">GIÂY</div>
+            </div>
+        </div>
+
+        <button class="btn-pixel" onclick="goToPage(3)">Ready? 💗 </button>
+    </div>
+
+    <!-- TRANG 3: BÁNH KEM CSS HOẠT HÌNH & ĐÀN VỊT CHẠY 3D -->
+    <div class="page" id="page3">
+        <div class="duck-stage">
+            <!-- Đàn vịt 3D chạy xung quanh -->
+            <div class="animated-duck duck-1">🐥</div>
+            <div class="animated-duck duck-2">🐤</div>
+            <div class="animated-duck duck-3">🦆</div>
+            <div class="animated-duck duck-4">🐣</div>
+
+            <!-- Bánh kem hoạt hình CSS -->
+            <div class="css-cake-container">
+                <div class="candle-stem">
+                    <div class="candle-flame"></div>
+                </div>
+                <div class="cake-body">
+                    <div class="icing-top"></div>
+                    <div class="drips">
+                        <div class="drip"></div>
+                        <div class="drip"></div>
+                        <div class="drip"></div>
+                        <div class="drip"></div>
+                        <div class="drip"></div>
+                        <div class="drip"></div>
+                    </div>
+                    <div class="cake-fill"></div>
+                    <div class="duck-face-on-cake">
+                        <div class="glasses"></div>
+                        <div class="beak"></div>
+                    </div>
+                </div>
+                <div class="cake-plate"></div>
+            </div>
+        </div>
+
+        <div class="falling-text-container" id="fallingTextContainer"></div>
+
+        <div class="battery-box">
+            <div class="battery-level" id="batteryLevel"></div>
+            <div class="battery-cap"></div>
+            <div class="battery-percent" id="batteryPercent">LOADING 0%</div>
+        </div>
+
+        <div class="gift-3d" id="gift3d" onclick="goToPage(4)" title="Open the magic💕">
+            🎁
+        </div>
+    </div>
+
+    <!-- TRANG 4: LỜI CHÚC & MÂY BUNG CHỮ -->
+    <div class="page" id="page4">
+        <div class="rising-clouds-wrapper" id="risingClouds"></div>
+        
+        <div class="wish-pixel-box">
+            <h2>🎉 HAPPY BIRTHDAY GINA 🎂</h2>
+            <p>
+                Chúc Gina Hell một tuổi mới thật vui vẻ, luôn rạng rỡ, xinh đẹp và ngập tràn may mắn. 
+                Mong rằng mọi con đường chị đi đều có hoa nở, mọi ước mơ đều trở thành hiện thực và vạn sự đều thuận lợi đúng như mong đợi! 🌸🥂💙
+                           Mãi iu Gina 💖
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // --- XỬ LÝ NHẠC NỀN ---
+        const audio = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+        const musicIcon = document.getElementById('musicIcon');
+        let isPlaying = false;
+
+        function playMusic() {
+            audio.play().then(() => {
+                isPlaying = true;
+                musicBtn.classList.add('playing');
+                musicIcon.className = 'fa-solid fa-music';
+            }).catch(e => {
+                console.log("Audio waiting for user interaction:", e);
+            });
+        }
+
+        function pauseMusic() {
+            audio.pause();
+            isPlaying = false;
+            musicBtn.classList.remove('playing');
+            musicIcon.className = 'fa-solid fa-music-slash';
+        }
+
+        function toggleMusic() {
+            if (isPlaying) {
+                pauseMusic();
+            } else {
+                playMusic();
+            }
+        }
+
+        // --- ĐIỀU HƯỚNG TRANG ---
+        function goToPage(pageNum) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById(`page${pageNum}`);
+            target.classList.add('active');
+
+            if (pageNum === 3) {
+                startPage3Animations();
+            } else if (pageNum === 4) {
+                startPage4Clouds();
+            }
+        }
+
+        // --- TRANG 1: SLIDER IPHONE ---
+        const sliderBtn = document.getElementById('sliderBtn');
+        const sliderWrapper = document.getElementById('sliderWrapper');
+        let isDragging = false;
+        let startX = 0;
+        let maxSlide = 0;
+
+        function initSlider() {
+            maxSlide = sliderWrapper.clientWidth - sliderBtn.clientWidth - 10;
+        }
+        window.addEventListener('resize', initSlider);
+        initSlider();
+
+        sliderBtn.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX - sliderBtn.offsetLeft;
+            playMusic(); // Tự động phát nhạc khi chạm vào slider
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            let currentX = e.clientX - startX;
+            if (currentX < 5) currentX = 5;
+            if (currentX > maxSlide) currentX = maxSlide;
+            sliderBtn.style.left = currentX + 'px';
+
+            if (currentX >= maxSlide - 5) {
+                isDragging = false;
+                goToPage(2);
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (!isDragging) return;
+            isDragging = false;
+            sliderBtn.style.left = '5px';
+        });
+
+        sliderBtn.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            startX = e.touches[0].clientX - sliderBtn.offsetLeft;
+            playMusic(); // Tự động phát nhạc khi chạm vào slider trên điện thoại
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            let currentX = e.touches[0].clientX - startX;
+            if (currentX < 5) currentX = 5;
+            if (currentX > maxSlide) currentX = maxSlide;
+            sliderBtn.style.left = currentX + 'px';
+
+            if (currentX >= maxSlide - 5) {
+                isDragging = false;
+                goToPage(2);
+            }
+        });
+
+        document.addEventListener('touchend', () => {
+            if (!isDragging) return;
+            isDragging = false;
+            sliderBtn.style.left = '5px';
+        });
+
+        // --- TRANG 2: COUNTDOWN MANILA TIME (00:00 06/08/2026 UTC+8) ---
+        const manilaTargetTime = new Date('2026-08-05T16:00:00Z').getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const diff = manilaTargetTime - now;
+
+            if (diff > 0) {
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerText = String(d).padStart(2, '0');
+                document.getElementById('hours').innerText = String(h).padStart(2, '0');
+                document.getElementById('minutes').innerText = String(m).padStart(2, '0');
+                document.getElementById('seconds').innerText = String(s).padStart(2, '0');
+            } else {
+                document.getElementById('days').innerText = "00";
+                document.getElementById('hours').innerText = "00";
+                document.getElementById('minutes').innerText = "00";
+                document.getElementById('seconds').innerText = "00";
+            }
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // --- TRANG 3: CHỮ RỚT & PIN LOADING ---
+        let page3Started = false;
+        function startPage3Animations() {
+            if (page3Started) return;
+            page3Started = true;
+
+            const fullText = "Gió xuân luôn đúng hẹn, hoa nở luôn đúng mùa; chúc Gina sinh nhật vui vẻ, vạn sự thuận lợi.";
+            const container = document.getElementById('fallingTextContainer');
+
+            fullText.split('').forEach((char, idx) => {
+                const span = document.createElement('span');
+                span.className = 'char-drop';
+                span.innerHTML = char === ' ' ? '&nbsp;' : char;
+                span.style.animationDelay = (idx * 0.035) + 's';
+                container.appendChild(span);
+            });
+
+            const page3 = document.getElementById('page3');
+            const flowers = ['🌸', '🌼', '✨', '🩵', '🐥'];
+            for (let i = 0; i < 15; i++) {
+                const fl = document.createElement('div');
+                fl.className = 'flower-particle';
+                fl.innerText = flowers[Math.floor(Math.random() * flowers.length)];
+                fl.style.left = Math.random() * 90 + 5 + 'vw';
+                fl.style.top = Math.random() * 80 + 10 + 'vh';
+                fl.style.animationDelay = Math.random() * 3 + 's';
+                fl.style.animationDuration = (Math.random() * 2 + 4) + 's';
+                page3.appendChild(fl);
+            }
+
+            let percent = 0;
+            const level = document.getElementById('batteryLevel');
+            const percentText = document.getElementById('batteryPercent');
+            const gift = document.getElementById('gift3d');
+
+            const batteryInterval = setInterval(() => {
+                percent++;
+                level.style.width = percent + '%';
+                percentText.innerText = `LOADING ${percent}%`;
+
+                if (percent >= 100) {
+                    clearInterval(batteryInterval);
+                    percentText.innerText = "COMPLETED! CLICK GIFT 🎁";
+                    gift.style.display = 'block';
+                }
+            }, 80);
+        }
+
+        // --- TRANG 4: MÂY CHỨA LỜI CHÚC ---
+        let cloudsStarted = false;
+        function startPage4Clouds() {
+            if (cloudsStarted) return;
+            cloudsStarted = true;
+
+            const wishPhrases = [
+                "✨ Gina Chấu Chí",
+                "💖 Gina phải hạnh phúc",
+                "🌸 Gina luôn vui vẻ",
+                "🥂 Gina gặp nhiều may mắn",
+                "⭐ Gina tỏa sáng",
+                "🎈 Gina bình an",
+                "🩵 Đường đi thuận lợi",
+                "🎁 Tuổi mới rực rỡ",
+                "Yêu chị nhất trên đời",
+                "吉娜最好的",
+                "你值得世间所有美好",
+                "愿你一直闪闪发光",
+                "愿你如星，灿若长河",
+                "愿你一路繁花相伴",
+                "Keep blooming in your own beautiful way",
+                "May life always be kind to you. 🤍",
+                "Keep shining, beautiful soul",
+                "Bloom beautifully, just as you always do. 🌼",
+                "🌷 Mãi yêu Gina Hell",
+                "🎂06 ♡ 08 ♡ 2026🎉"
+            ];
+
+            const cloudsContainer = document.getElementById('risingClouds');
+            for (let i = 0; i < 20; i++) {
+                const cloud = document.createElement('div');
+                cloud.className = 'floating-cloud';
+                cloud.innerText = wishPhrases[i % wishPhrases.length];
+                
+                const width = Math.random() * 60 + 120;
+                cloud.style.width = width + 'px';
+                cloud.style.height = (width * 0.45) + 'px';
+                cloud.style.left = Math.random() * 85 + 'vw';
+                cloud.style.animationDuration = (Math.random() * 5 + 7) + 's';
+                cloud.style.animationDelay = Math.random() * 5 + 's';
+                cloudsContainer.appendChild(cloud);
+            }
+        }
+    </script>
+</body>
+</html>
