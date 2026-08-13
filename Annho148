@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Ying hong 💖 映红世界</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Mali:wght@500;700&family=Press+Start+2P&family=Quicksand:wght@600;700&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --pink-bg: #ffe5ec;
+            --pink-card: #fff0f5;
+            --pink-main: #ffb3c6;
+            --pink-dark: #ff85a1;
+            --pink-deep: #ff477e;
+            --pastel-yellow: #fff3b0;
+            --text-color: #5c3d46;
+            --pixel-border: #f72585;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffe5ec 0%, #ffc2d1 50%, #ffe5ec 100%);
+            color: var(--text-color);
+            font-family: 'Quicksand', 'Mali', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- NÚT CHỈNH NHẠC NỔI --- */
+        .music-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 3px solid var(--pink-dark);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--pink-deep);
+            font-size: 1.4rem;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(255, 133, 161, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .music-btn.playing {
+            animation: spin 4s linear infinite;
+            background: var(--pink-main);
+            color: #ffffff;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- CẤU TRÚC TRANG --- */
+        .page {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease;
+            padding: 20px;
+            text-align: center;
+            overflow-y: auto;
+        }
+
+        .page.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+
+        /* HỌA TIẾT CUTE TRÔI BỀNH BỒNG */
+        .floating-heart {
+            position: absolute;
+            pointer-events: none;
+            font-size: 1.5rem;
+            animation: floatUp 6s linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(105vh) scale(0.8) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- TRANG 1: MẬT KHẨU MÀN HÌNH ĐIỆN THOẠI (PHONE PASSCODE UI) --- */
+        .phone-container {
+            width: 320px;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(12px);
+            padding: 30px 20px;
+            border-radius: 40px;
+            box-shadow: 0 20px 45px rgba(255, 71, 126, 0.3);
+            border: 4px solid var(--pink-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: bounceIn 0.8s ease;
+            position: relative;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .avatar-box {
+            width: 105px;
+            height: 105px;
+            border-radius: 50%;
+            border: 4px solid var(--pink-dark);
+            overflow: hidden;
+            margin-bottom: 12px;
+            box-shadow: 0 8px 20px rgba(255, 71, 126, 0.25);
+            background: var(--pink-bg);
+        }
+
+        .avatar-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .phone-title {
+            font-size: 1.2rem;
+            color: var(--pink-deep);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .phone-sub {
+            font-size: 0.8rem;
+            color: #885060;
+            margin-bottom: 18px;
+        }
+
+        /* CHẤM TRÒN MẬT KHẨU (PASSCODE DOTS) */
+        .passcode-dots {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+
+        .dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: 2px solid var(--pink-deep);
+            background: transparent;
+            transition: all 0.2s ease;
+        }
+
+        .dot.active {
+            background: var(--pink-deep);
+            box-shadow: 0 0 8px rgba(255, 71, 126, 0.6);
+        }
+
+        .dot.error {
+            animation: shake 0.4s ease;
+            border-color: #d90429;
+            background: #d90429;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        /* BÀN PHÍM SỐ CẢM ỨNG (KEYPAD) */
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px 18px;
+            width: 100%;
+            max-width: 240px;
+        }
+
+        .key-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid var(--pink-main);
+            color: var(--pink-deep);
+            font-size: 1.3rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            margin: 0 auto;
+            box-shadow: 0 4px 10px rgba(255, 179, 198, 0.35);
+            transition: all 0.15s ease;
+        }
+
+        .key-btn:active {
+            transform: scale(0.9);
+            background: var(--pink-dark);
+            color: #ffffff;
+        }
+
+        .key-btn.action-btn {
+            font-size: 1rem;
+            border-color: transparent;
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: none;
+        }
+
+        .error-msg {
+            color: #d90429;
+            font-size: 0.8rem;
+            margin-top: 12px;
+            height: 18px;
+            font-weight: bold;
+        }
+
+        .btn-cute {
+            background: linear-gradient(45deg, var(--pink-dark), var(--pink-deep));
+            color: white;
+            border: none;
+            padding: 12px 26px;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(255, 71, 126, 0.4);
+            transition: all 0.2s;
+            font-family: 'Mali', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 5px;
+        }
+
+        .btn-cute:hover {
+            transform: translateY(-3px) scale(1.04);
+            box-shadow: 0 8px 22px rgba(255, 71, 126, 0.5);
+        }
+
+        .btn-secondary-cute {
+            background: linear-gradient(45deg, #a2d2ff, #bde0fe);
+            color: #2b4c59;
+            box-shadow: 0 6px 18px rgba(162, 210, 255, 0.5);
+        }
+
+        /* --- TRANG 2: VÒNG ĐU QUAY 3D CHÂN THỰC & PIXEL COUNTDOWN --- */
+        .cn-title {
+            font-family: 'Ma Shan Zheng', 'Dancing Script', cursive;
+            font-size: 2.2rem;
+            color: var(--pink-deep);
+            text-shadow: 2px 2px 0px #ffffff, 0 0 15px rgba(255, 255, 255, 0.8);
+            margin-bottom: 5px;
+        }
+
+        .ferris-wheel-container {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: 15px auto 25px auto;
+            perspective: 800px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ferris-wheel {
+            position: absolute;
+            width: 190px;
+            height: 190px;
+            border: 6px solid var(--pink-dark);
+            border-radius: 50%;
+            animation: spinWheel 12s linear infinite;
+            transform-style: preserve-3d;
+            box-shadow: 0 0 20px rgba(255, 133, 161, 0.4), inset 0 0 15px rgba(255, 133, 161, 0.2);
+            z-index: 2;
+        }
+
+        @keyframes spinWheel {
+            from { transform: rotateZ(0deg); }
+            to { transform: rotateZ(360deg); }
+        }
+
+        /* TRỤC TÂM XOAY (HUB CENTER) */
+        .wheel-hub {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 32px;
+            height: 32px;
+            background: radial-gradient(circle, #ffffff 0%, var(--pink-deep) 100%);
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 0 12px rgba(255, 71, 126, 0.6);
+            z-index: 5;
+        }
+
+        /* CĂM NAN HOA (SPOKES) */
+        .spoke {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255,133,161,0.2) 0%, var(--pink-dark) 50%, rgba(255,133,161,0.2) 100%);
+            transform-origin: center center;
+            margin-top: -1px;
+            margin-left: -50%;
+        }
+
+        .spoke-1 { transform: rotate(0deg); }
+        .spoke-2 { transform: rotate(30deg); }
+        .spoke-3 { transform: rotate(60deg); }
+        .spoke-4 { transform: rotate(90deg); }
+        .spoke-5 { transform: rotate(120deg); }
+        .spoke-6 { transform: rotate(150deg); }
+
+        .inner-wheel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border: 3px dashed var(--pink-main);
+            border-radius: 50%;
+        }
+
+        /* CHÂN ĐẾ KIM LOẠI CHỮ A */
+        .wheel-stand {
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 115px solid var(--pink-main);
+            z-index: 1;
+            filter: drop-shadow(0 6px 10px rgba(0,0,0,0.1));
+        }
+
+        .wheel-stand::after {
+            content: '';
+            position: absolute;
+            bottom: -115px;
+            left: -35px;
+            width: 0;
+            height: 0;
+            border-left: 35px solid transparent;
+            border-right: 35px solid transparent;
+            border-bottom: 85px solid var(--pink-bg);
+        }
+
+        .cabin {
+            position: absolute;
+            width: 34px;
+            height: 34px;
+            background: var(--pastel-yellow);
+            border: 2px solid var(--pink-deep);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.05rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            animation: counterSpin 12s linear infinite;
+        }
+
+        @keyframes counterSpin {
+            from { transform: rotateZ(0deg); }
+            to { transform: rotateZ(-360deg); }
+        }
+
+        .c1 { top: -17px; left: calc(50% - 17px); }
+        .c2 { top: 28px; right: -12px; }
+        .c3 { bottom: 28px; right: -12px; }
+        .c4 { bottom: -17px; left: calc(50% - 17px); }
+        .c5 { bottom: 28px; left: -12px; }
+        .c6 { top: 28px; left: -12px; }
+
+        .pixel-countdown-box {
+            font-family: 'Press Start 2P', monospace;
+            background: rgba(255, 255, 255, 0.9);
+            border: 4px solid var(--pink-dark);
+            box-shadow: 6px 6px 0px var(--pink-deep);
+            padding: 20px 15px;
+            border-radius: 12px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+            max-width: 90vw;
+        }
+
+        .pixel-time-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 65px;
+        }
+
+        .pixel-num {
+            font-size: 1.4rem;
+            color: var(--pink-deep);
+            margin-bottom: 6px;
+        }
+
+        .pixel-label {
+            font-size: 0.5rem;
+            color: var(--text-color);
+        }
+
+        /* --- TRANG 3: BÁNH KEM & TÍNH NĂNG AI --- */
+        .cake-container {
+            position: relative;
+            width: 180px;
+            height: 130px;
+            margin-bottom: 20px;
+        }
+
+        .cake-layer {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 15px 15px 8px 8px;
+            background: linear-gradient(180deg, #fff 0%, var(--pink-main) 100%);
+            border: 3px solid #ff85a1;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        .cake-bottom {
+            bottom: 0;
+            width: 170px;
+            height: 55px;
+        }
+
+        .cake-top {
+            bottom: 50px;
+            width: 120px;
+            height: 48px;
+            background: linear-gradient(180deg, #fff 0%, #ffc2d1 100%);
+        }
+
+        .candle {
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 30px;
+            background: repeating-linear-gradient(45deg, #fff, #fff 4px, var(--pink-deep) 4px, var(--pink-deep) 8px);
+            border-radius: 3px;
+        }
+
+        .flame {
+            position: absolute;
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 18px;
+            background: #ffbe0b;
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 0 12px #ffbe0b, 0 0 20px #fb5607;
+            animation: flameFlicker 0.6s infinite alternate;
+        }
+
+        @keyframes flameFlicker {
+            0% { transform: translateX(-50%) scale(1); }
+            100% { transform: translateX(-50%) scale(1.2) rotate(3deg); }
+        }
+
+        .wish-quote {
+            font-size: 1.05rem;
+            color: var(--pink-deep);
+            background: rgba(255, 255, 255, 0.92);
+            padding: 16px 20px;
+            border-radius: 20px;
+            border: 2px dashed var(--pink-dark);
+            max-width: 460px;
+            width: 90%;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-weight: bold;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ai-action-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            max-width: 520px;
+        }
+
+        .ai-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ai-modal.active {
+            display: flex;
+        }
+
+        .ai-modal-card {
+            background: #ffffff;
+            border: 4px solid var(--pink-dark);
+            border-radius: 25px;
+            padding: 25px 20px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 15px 35px rgba(255, 71, 126, 0.3);
+            position: relative;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .ai-modal-close {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 1.5rem;
+            color: var(--pink-dark);
+            cursor: pointer;
+        }
+
+        .mood-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        .mood-chip {
+            background: var(--pink-card);
+            border: 2px solid var(--pink-main);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+
+        .mood-chip.selected {
+            background: var(--pink-deep);
+            color: #ffffff;
+            border-color: var(--pink-deep);
+        }
+
+        .ai-output-box {
+            background: var(--pink-card);
+            border: 2px dashed var(--pink-dark);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 15px;
+            min-height: 100px;
+            max-height: 180px;
+            overflow-y: auto;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #4a3139;
+            text-align: left;
+        }
+
+        /* --- TRANG 4: LỜI THƯ & TTS VOICE --- */
+        .letter-box {
+            background: rgba(255, 255, 255, 0.95);
+            border: 4px solid var(--pink-main);
+            border-radius: 25px;
+            padding: 25px 20px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 12px 30px rgba(255, 133, 161, 0.3);
+            text-align: left;
+            position: relative;
+            max-height: 70vh;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+
+        .letter-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: var(--pink-deep);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .letter-content {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #4a3139;
+            font-weight: 600;
+        }
+
+        .letter-signature {
+            text-align: right;
+            margin-top: 20px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            color: var(--pink-deep);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255,255,255,0.4);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop src="Annhomuscic.mp3"></audio>
+
+    <div class="music-btn" id="musicBtn" onclick="toggleMusic()" title="Bật/Tắt nhạc">
+        <i class="fa-solid fa-music-slash" id="musicIcon"></i>
+    </div>
+
+    <div class="floating-heart" style="left: 10%; animation-delay: 0s;">🌸</div>
+    <div class="floating-heart" style="left: 25%; animation-delay: 2s;">💖</div>
+    <div class="floating-heart" style="left: 60%; animation-delay: 4s;">✨</div>
+    <div class="floating-heart" style="left: 80%; animation-delay: 1s;">🌷</div>
+
+    <!-- TRANG 1: MẬT KHẨU MÀN HÌNH ĐIỆN THOẠI -->
+    <div class="page active" id="page1">
+        <div class="phone-container">
+            <div class="avatar-box">
+                <img src="Annhopic.jpg" alt="Ying hong" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80'">
+            </div>
+            <div class="phone-title">Ying hong's Phone 🎀</div>
+            <div class="phone-sub">Nhập mật khẩu để mở khóa</div>
+
+            <!-- DÃY CHẤM ĐIỂM PASSCODE -->
+            <div class="passcode-dots" id="passcodeDots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+
+            <!-- BÀN PHÍM CẢM ỨNG CỦA ĐIỆN THOẠI -->
+            <div class="keypad">
+                <button class="key-btn" onclick="pressKey('1')">1</button>
+                <button class="key-btn" onclick="pressKey('2')">2</button>
+                <button class="key-btn" onclick="pressKey('3')">3</button>
+                <button class="key-btn" onclick="pressKey('4')">4</button>
+                <button class="key-btn" onclick="pressKey('5')">5</button>
+                <button class="key-btn" onclick="pressKey('6')">6</button>
+                <button class="key-btn" onclick="pressKey('7')">7</button>
+                <button class="key-btn" onclick="pressKey('8')">8</button>
+                <button class="key-btn" onclick="pressKey('9')">9</button>
+                <button class="key-btn action-btn" onclick="clearPasscode()">✨</button>
+                <button class="key-btn" onclick="pressKey('0')">0</button>
+                <button class="key-btn action-btn" onclick="deleteLastKey()"><i class="fa-solid fa-backspace"></i></button>
+            </div>
+
+            <div class="error-msg" id="errorMsg"></div>
+        </div>
+    </div>
+
+    <!-- TRANG 2: VÒNG ĐU QUAY 3D VỚI TRỤC TÂM & PIXEL COUNTDOWN -->
+    <div class="page" id="page2">
+        <div class="cn-title">欢迎来到映红世界</div>
+
+        <!-- VÒNG ĐU QUAY 3D CHÂN THỰC -->
+        <div class="ferris-wheel-container">
+            <div class="wheel-stand"></div>
+            
+            <div class="ferris-wheel">
+                <!-- Căm nan hoa nối từ trục ra ngoài -->
+                <div class="spoke spoke-1"></div>
+                <div class="spoke spoke-2"></div>
+                <div class="spoke spoke-3"></div>
+                <div class="spoke spoke-4"></div>
+                <div class="spoke spoke-5"></div>
+                <div class="spoke spoke-6"></div>
+                <div class="inner-wheel"></div>
+
+                <!-- Các cabin đu quay -->
+                <div class="cabin c1">🎡</div>
+                <div class="cabin c2">🌸</div>
+                <div class="cabin c3">💖</div>
+                <div class="cabin c4">✨</div>
+                <div class="cabin c5">🧸</div>
+                <div class="cabin c6">🌷</div>
+            </div>
+
+            <!-- Trục tâm xoay tròn cố định -->
+            <div class="wheel-hub"></div>
+        </div>
+
+        <div class="pixel-countdown-box">
+            <div class="pixel-time-card">
+                <div class="pixel-num" id="days">00</div>
+                <div class="pixel-label">DAYS</div>
+            </div>
+            <div class="pixel-time-card">
+                <div class="pixel-num" id="hours">00</div>
+                <div class="pixel-label">HOURS</div>
+            </div>
+            <div class="pixel-time-card">
+                <div class="pixel-num" id="minutes">00</div>
+                <div class="pixel-label">MINS</div>
+            </div>
+            <div class="pixel-time-card">
+                <div class="pixel-num" id="seconds">00</div>
+                <div class="pixel-label">SECS</div>
+            </div>
+        </div>
+
+        <button class="btn-cute" onclick="goToPage(3)">Xem Bánh Kem 🎂</button>
+    </div>
+
+    <!-- TRANG 3: BÁNH KEM & LỜI CHÚC AI -->
+    <div class="page" id="page3">
+        <div class="cake-container">
+            <div class="candle"><div class="flame"></div></div>
+            <div class="cake-layer cake-top"></div>
+            <div class="cake-layer cake-bottom"></div>
+        </div>
+
+        <div class="wish-quote" id="wishQuoteDisplay">
+            "Cầu mong tuổi mới mang đến cho Ying hong thật nhiều niềm vui, sự ngọt ngào và những điều may mắn nhất thế giới! 🌸✨"
+        </div>
+
+        <div class="ai-action-group">
+            <button class="btn-cute" onclick="openWishModal()">✨ Tạo Lời Chúc AI ✨</button>
+            <button class="btn-cute btn-secondary-cute" onclick="drawFortuneCookie()">✨ Rút Quẻ Tuổi Mới ✨</button>
+        </div>
+
+        <button class="btn-cute" onclick="goToPage(4)">Đọc Thư Dành Cho Ying hong ✉️</button>
+    </div>
+
+    <!-- MODAL TẠO LỜI CHÚC AI -->
+    <div class="ai-modal" id="wishModal">
+        <div class="ai-modal-card">
+            <span class="ai-modal-close" onclick="closeWishModal()">&times;</span>
+            <h3 style="color: var(--pink-deep); margin-bottom: 10px;">✨ Tạo Lời Chúc AI Mới ✨</h3>
+            <p style="font-size: 0.85rem; color: #666;">Chọn phong cách lời chúc dành riêng cho Ying hong:</p>
+            
+            <div class="mood-options">
+                <div class="mood-chip selected" onclick="selectMood(this, 'Ngọt ngào 🍬')">Ngọt ngào 🍬</div>
+                <div class="mood-chip" onclick="selectMood(this, 'Hài hước 🤪')">Hài hước 🤪</div>
+                <div class="mood-chip" onclick="selectMood(this, 'Thơ mộng 🌸')">Thơ mộng 🌸</div>
+                <div class="mood-chip" onclick="selectMood(this, 'May mắn 🍀')">May mắn 🍀</div>
+            </div>
+
+            <button class="btn-cute" id="genWishBtn" onclick="generateAiWish()" style="width: 100%; margin-top: 5px;">
+                ✨ Sáng Tạo Lời Chúc ✨
+            </button>
+
+            <div class="ai-output-box" id="aiWishResult">
+                Chọn phong cách và bấm nút để AI viết những dòng chúc ngọt ngào nhất cho Ying hong nhé! 💖
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL RÚT QUẺ BÓI AI -->
+    <div class="ai-modal" id="fortuneModal">
+        <div class="ai-modal-card">
+            <span class="ai-modal-close" onclick="closeFortuneModal()">&times;</span>
+            <h3 style="color: var(--pink-deep); margin-bottom: 10px;">✨ Quẻ Bói Tuổi Mới AI ✨</h3>
+            <div class="ai-output-box" id="fortuneResult" style="text-align: center; min-height: 120px;">
+                Đang rút quẻ may mắn cho Ying hong... 🔮
+            </div>
+        </div>
+    </div>
+
+    <!-- TRANG 4: LỜI THƯ DÀNH CHO YING HONG -->
+    <div class="page" id="page4">
+        <div class="letter-box" id="letterBoxText">
+            <div class="letter-title">Dear Ying hong 💖</div>
+            <div class="letter-content" id="letterBody">
+                Gửi Ying hong thân yêu,<br><br>
+                Chúc mừng sinh nhật cô gái tuyệt vời! Mong rằng mỗi ngày sắp tới của bạn đều tràn ngập ánh nắng, nụ cười luôn nở trên môi và mọi ước mơ đều sẽ từng bước trở thành hiện thực.<br><br>
+                Cảm ơn bạn vì đã xuất hiện và mang lại những điều ngọt ngào nhất. Chúc bạn tuổi mới luôn rực rỡ, bình an, vạn sự thuận lợi và luôn được yêu thương thật nhiều! 🌷🎂✨
+            </div>
+            <div class="letter-signature">Happy Birthday! 💕</div>
+        </div>
+
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+            <button class="btn-cute btn-secondary-cute" id="ttsBtn" onclick="speakLetterWithGemini()">
+                ✨ Đọc Thư Bằng Giọng AI ✨
+            </button>
+            <button class="btn-cute" onclick="goToPage(2)">Quay Lại Vòng Quay 🎡</button>
+        </div>
+    </div>
+
+    <script>
+        const apiKey = "";
+
+        // --- XỬ LÝ NHẠC NỀN ---
+        const audio = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+        const musicIcon = document.getElementById('musicIcon');
+        let isPlaying = false;
+
+        function playMusic() {
+            audio.play().then(() => {
+                isPlaying = true;
+                musicBtn.classList.add('playing');
+                musicIcon.className = 'fa-solid fa-music';
+            }).catch(e => console.log("Audio waiting for user click"));
+        }
+
+        function pauseMusic() {
+            audio.pause();
+            isPlaying = false;
+            musicBtn.classList.remove('playing');
+            musicIcon.className = 'fa-solid fa-music-slash';
+        }
+
+        function toggleMusic() {
+            if (isPlaying) pauseMusic();
+            else playMusic();
+        }
+
+        // --- ĐIỀU HƯỚNG TRANG ---
+        function goToPage(pageNum) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(`page${pageNum}`).classList.add('active');
+        }
+
+        // --- BÀN PHÍM PASSCODE ĐIỆN THOẠI (1408) ---
+        let currentPasscode = "";
+
+        function pressKey(num) {
+            if (currentPasscode.length < 4) {
+                currentPasscode += num;
+                updatePasscodeDots();
+
+                if (currentPasscode.length === 4) {
+                    setTimeout(checkPasscode, 150);
+                }
+            }
+        }
+
+        function deleteLastKey() {
+            if (currentPasscode.length > 0) {
+                currentPasscode = currentPasscode.slice(0, -1);
+                updatePasscodeDots();
+            }
+            document.getElementById('errorMsg').innerText = '';
+        }
+
+        function clearPasscode() {
+            currentPasscode = "";
+            updatePasscodeDots();
+            document.getElementById('errorMsg').innerText = '';
+        }
+
+        function updatePasscodeDots() {
+            const dots = document.querySelectorAll('.passcode-dots .dot');
+            dots.forEach((dot, index) => {
+                if (index < currentPasscode.length) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active', 'error');
+                }
+            });
+        }
+
+        function checkPasscode() {
+            const error = document.getElementById('errorMsg');
+            const dots = document.querySelectorAll('.passcode-dots .dot');
+
+            if (currentPasscode === '1408') {
+                error.innerText = '';
+                playMusic();
+                goToPage(2);
+            } else {
+                error.innerText = 'Mật khẩu sai rồi nè! (Gợi ý: 1408)';
+                dots.forEach(d => d.classList.add('error'));
+                setTimeout(() => {
+                    clearPasscode();
+                }, 500);
+            }
+        }
+
+        // Nhập bằng bàn phím máy tính
+        document.addEventListener('keydown', function(e) {
+            const activePage = document.getElementById('page1').classList.contains('active');
+            if (!activePage) return;
+
+            if (e.key >= '0' && e.key <= '9') {
+                pressKey(e.key);
+            } else if (e.key === 'Backspace') {
+                deleteLastKey();
+            } else if (e.key === 'Escape') {
+                clearPasscode();
+            }
+        });
+
+        // --- ĐẾM NGƯỢC TỚI 00:00 NGÀY 14/08/2026 GIỜ MANILA (UTC+8) ---
+        const targetDate = new Date('2026-08-14T00:00:00+08:00').getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+
+            if (diff > 0) {
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerText = String(d).padStart(2, '0');
+                document.getElementById('hours').innerText = String(h).padStart(2, '0');
+                document.getElementById('minutes').innerText = String(m).padStart(2, '0');
+                document.getElementById('seconds').innerText = String(s).padStart(2, '0');
+            } else {
+                document.getElementById('days').innerText = "00";
+                document.getElementById('hours').innerText = "00";
+                document.getElementById('minutes').innerText = "00";
+                document.getElementById('seconds').innerText = "00";
+            }
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // --- HÀM GỌI GEMINI API VỚI EXPONENTIAL BACKOFF ---
+        async function fetchGeminiApi(url, payload) {
+            let delay = 1000;
+            for (let i = 0; i < 5; i++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+                    return await response.json();
+                } catch (err) {
+                    if (i === 4) throw err;
+                    await new Promise(res => setTimeout(res, delay));
+                    delay *= 2;
+                }
+            }
+        }
+
+        // --- TÍNH NĂNG 1: TẠO LỜI CHÚC AI (GEMINI TEXT) ---
+        let selectedMood = 'Ngọt ngào 🍬';
+
+        function openWishModal() {
+            document.getElementById('wishModal').classList.add('active');
+        }
+
+        function closeWishModal() {
+            document.getElementById('wishModal').classList.remove('active');
+        }
+
+        function selectMood(el, mood) {
+            document.querySelectorAll('.mood-chip').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedMood = mood;
+        }
+
+        async function generateAiWish() {
+            const btn = document.getElementById('genWishBtn');
+            const resultBox = document.getElementById('aiWishResult');
+            btn.innerHTML = '<span class="loading-spinner"></span> Đang viết...';
+            btn.disabled = true;
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const prompt = `Hãy viết một lời chúc sinh nhật ngắn gọn (tối đa 3-4 câu), phong cách "${selectedMood}", dành tặng cho cô gái tên là Ying hong (映红). Sử dụng biểu tượng cảm xúc cute, ấm áp, tình cảm.`;
+
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }]
+            };
+
+            try {
+                const data = await fetchGeminiApi(url, payload);
+                const wishText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Chúc Ying hong sinh nhật vui vẻ, tuổi mới thật nhiều may mắn và hạnh phúc! 🌸✨";
+                
+                resultBox.innerText = wishText;
+                document.getElementById('wishQuoteDisplay').innerText = `"${wishText}"`;
+            } catch (err) {
+                console.error(err);
+                resultBox.innerText = "Chưa kết nối được với AI rồi, nhưng chúc Ying hong tuổi mới luôn xinh đẹp và ngập tràn may mắn nhé! 💖";
+            } finally {
+                btn.innerHTML = '✨ Sáng Tạo Lời Chúc ✨';
+                btn.disabled = false;
+            }
+        }
+
+        // --- TÍNH NĂNG 2: RÚT QUẺ TUỔI MỚI (GEMINI FORTUNE) ---
+        function closeFortuneModal() {
+            document.getElementById('fortuneModal').classList.remove('active');
+        }
+
+        async function drawFortuneCookie() {
+            const modal = document.getElementById('fortuneModal');
+            const resultBox = document.getElementById('fortuneResult');
+            modal.classList.add('active');
+            resultBox.innerHTML = 'Đang giải quẻ may mắn tuổi mới cho Ying hong... 🔮✨<br><span class="loading-spinner" style="border-top-color: var(--pink-deep); margin-top: 10px;"></span>';
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const prompt = `Viết 1 quẻ bói tuổi mới (Fortune cookie) siêu cute, hài hước và may mắn cho bạn nữ tên Ying hong (映红). 
+            Độ dài: khoảng 3 câu. Thêm các chỉ số may mắn vui như: 
+            - Chỉ số hạnh phúc: 100% 💖
+            - Chỉ số xinh đẹp: vô tận ✨
+            - Dự đoán: (1 câu phán siêu dễ thương)`;
+
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }]
+            };
+
+            try {
+                const data = await fetchGeminiApi(url, payload);
+                const fortuneText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Quẻ Đại Cát! Tuổi mới Ying hong sẽ gặp vô vàn may mắn, xinh đẹp và vạn sự như ý! ✨💖";
+                resultBox.innerText = fortuneText;
+            } catch (err) {
+                console.error(err);
+                resultBox.innerText = "🔮 Quẻ Đại Cát: Tuổi mới Ying hong sẽ tràn ngập niềm vui, xinh đẹp gấp đôi và mọi ước mơ đều thành hiện thực! 💖✨";
+            }
+        }
+
+        // --- TÍNH NĂNG 3: ĐỌC THƯ BẰNG GEMINI TTS (TEXT-TO-SPEECH) ---
+        let currentAudioSource = null;
+
+        function pcmToWav(pcmBase64, sampleRate = 24000) {
+            const binaryString = window.atob(pcmBase64);
+            const len = binaryString.length;
+            const pcmData = new Int16Array(len / 2);
+            for (let i = 0; i < len; i += 2) {
+                pcmData[i / 2] = binaryString.charCodeAt(i) | (binaryString.charCodeAt(i + 1) << 8);
+            }
+            
+            const buffer = new ArrayBuffer(44 + pcmData.length * 2);
+            const view = new DataView(buffer);
+            
+            for (let i = 0; i < 4; i++) view.setUint8(i, "RIFF".charCodeAt(i));
+            view.setUint32(4, 36 + pcmData.length * 2, true);
+            for (let i = 0; i < 4; i++) view.setUint8(8 + i, "WAVE".charCodeAt(i));
+            for (let i = 0; i < 4; i++) view.setUint8(12 + i, "fmt ".charCodeAt(i));
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
+            view.setUint16(22, 1, true);
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * 2, true);
+            view.setUint16(32, 2, true);
+            view.setUint16(34, 16, true);
+            for (let i = 0; i < 4; i++) view.setUint8(36 + i, "data".charCodeAt(i));
+            view.setUint32(40, pcmData.length * 2, true);
+            
+            for (let i = 0; i < pcmData.length; i++) {
+                view.setInt16(44 + i * 2, pcmData[i], true);
+            }
+            
+            return new Blob([buffer], { type: 'audio/wav' });
+        }
+
+        async function speakLetterWithGemini() {
+            const btn = document.getElementById('ttsBtn');
+            
+            if (currentAudioSource) {
+                currentAudioSource.pause();
+                currentAudioSource = null;
+                btn.innerHTML = '✨ Đọc Thư Bằng Giọng AI ✨';
+                return;
+            }
+
+            btn.innerHTML = '<span class="loading-spinner"></span> Đang tạo giọng đọc...';
+            btn.disabled = true;
+
+            pauseMusic();
+
+            const textToSpeak = "Say in a warm, cheerful, sweet voice: Gửi Ying hong thân yêu, Chúc mừng sinh nhật cô gái tuyệt vời! Mong rằng mỗi ngày sắp tới của bạn đều tràn ngập ánh nắng, nụ cười luôn nở trên môi và mọi ước mơ đều sẽ từng bước trở thành hiện thực. Chúc bạn tuổi mới luôn rực rỡ, bình an và luôn được yêu thương thật nhiều!";
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: textToSpeak }] }],
+                generationConfig: {
+                    responseModalities: ["AUDIO"],
+                    speechConfig: {
+                        voiceConfig: {
+                            prebuiltVoiceConfig: { voiceName: "Aoede" }
+                        }
+                    }
+                }
+            };
+
+            try {
+                const data = await fetchGeminiApi(url, payload);
+                const pcmBase64 = data.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
+
+                if (pcmBase64) {
+                    const wavBlob = pcmToWav(pcmBase64, 24000);
+                    const audioUrl = URL.createObjectURL(wavBlob);
+                    currentAudioSource = new Audio(audioUrl);
+                    
+                    btn.innerHTML = '⏸ Tạm Dừng Đọc';
+                    btn.disabled = false;
+
+                    currentAudioSource.play();
+                    currentAudioSource.onended = () => {
+                        btn.innerHTML = '✨ Đọc Thư Bằng Giọng AI ✨';
+                        currentAudioSource = null;
+                    };
+                } else {
+                    throw new Error("No audio payload returned");
+                }
+            } catch (err) {
+                console.error("TTS Error, falling back to Web Speech:", err);
+                fallbackWebSpeech();
+            }
+        }
+
+        function fallbackWebSpeech() {
+            const btn = document.getElementById('ttsBtn');
+            if ('speechSynthesis' in window) {
+                const text = "Gửi Ying hong thân yêu, Chúc mừng sinh nhật cô gái tuyệt vời! Mong rằng mỗi ngày sắp tới của bạn đều tràn ngập ánh nắng, nụ cười luôn nở trên môi và mọi ước mơ đều sẽ từng bước trở thành hiện thực. Chúc bạn tuổi mới luôn rực rỡ, bình an!";
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'vi-VN';
+                utterance.rate = 0.95;
+                utterance.pitch = 1.1;
+
+                utterance.onend = () => {
+                    btn.innerHTML = '✨ Đọc Thư Bằng Giọng AI ✨';
+                };
+
+                window.speechSynthesis.speak(utterance);
+                btn.innerHTML = '🔊 Đang Đọc Thư...';
+                btn.disabled = false;
+            } else {
+                alert("Trình duyệt không hỗ trợ phát giọng nói.");
+                btn.innerHTML = '✨ Đọc Thư Bằng Giọng AI ✨';
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
